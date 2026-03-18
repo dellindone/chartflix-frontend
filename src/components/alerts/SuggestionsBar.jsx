@@ -6,6 +6,7 @@ import styles from './SuggestionsBar.module.css';
 
 export default function SuggestionsBar({ dateFrom, dateTo, onSetDirection, onSetCategory, onSetQuickDate }) {
   const chips = useMemo(() => {
+
     const inDate = (a) => {
       if (dateFrom && a.date < dateFrom) return false;
       if (dateTo   && a.date > dateTo)   return false;
@@ -27,7 +28,7 @@ export default function SuggestionsBar({ dateFrom, dateTo, onSetDirection, onSet
       if (n) result.push({ cls: '', label: `${n} ${cat.charAt(0) + cat.slice(1).toLowerCase()} alerts`, action: () => onSetCategory(cat) });
     });
     return result;
-  }, [dateFrom, dateTo]);
+  }, [dateFrom, dateTo, onSetCategory, onSetDirection, onSetQuickDate]);
 
   if (!chips.length) return null;
 

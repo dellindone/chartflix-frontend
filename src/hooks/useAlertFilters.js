@@ -44,7 +44,7 @@ export function useAlertFilters() {
       if (categoryFilter !== 'ALL' && a.category !== categoryFilter) return false;
       if (directionFilter !== 'ALL' && a.direction !== directionFilter) return false;
       return isInDate(a);
-    });
+    }, [isInDate]);
   }, [categoryFilter, directionFilter, dateFrom, dateTo]);
 
   // Category summary (only date-filtered, not category-filtered)

@@ -1,0 +1,14 @@
+/* src/pages/AlertsPage.module.css */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.fixed    { flex-shrink: 0; }
+.scroll   { flex: 1; overflow-y: auto; min-height: 0; padding: 12px 16px 24px; }
+.grid     { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.empty    { text-align: center; padding: 48px 24px; color: var(--tx3); font-size: 12px; font-family: var(--font-mono); }
+.resultBar { padding: 10px 16px 4px; flex-shrink: 0; }
+.resultText { font-size: 11px; color: var(--tx3); font-family: var(--font-mono); }
+.resultText strong { color: var(--tx); font-weight: 600; }

@@ -1,0 +1,75 @@
+/* src/components/alerts/CategorySummary.module.css */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--bdr2);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.card {
+  background: var(--surf);
+  border: 1px solid var(--bdr2);
+  border-radius: var(--rl);
+  padding: 13px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card:hover { border-color: var(--blue); transform: translateY(-1px); }
+.activeIndex     { border-color: var(--blue);   background: var(--blue-bg);   }
+.activeCommodity { border-color: var(--amber);  background: var(--amber-bg);  }
+.activeStock     { border-color: var(--purple); background: var(--purple-bg); }
+
+.top   { display: flex; align-items: center; justify-content: space-between; }
+.title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.titleIndex     { color: var(--blue);   }
+.titleCommodity { color: var(--amber);  }
+.titleStock     { color: var(--purple); }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; }
+.dotIndex     { background: var(--blue);   }
+.dotCommodity { background: var(--amber);  }
+.dotStock     { background: var(--purple); }
+
+.totalText { font-family: var(--font-mono); font-size: 10px; color: var(--tx3); }
+
+.counts { display: flex; gap: 5px; }
+.bullBox, .bearBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  padding: 6px 8px;
+  flex: 1;
+  justify-content: center;
+}
+.bullBox { background: var(--green-bg); border: 1px solid var(--green-dim); }
+.bearBox { background: var(--red-bg);   border: 1px solid var(--red-dim); }
+
+.bullNum { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--green); }
+.bearNum { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--red); }
+.countLabel { font-size: 10px; font-family: var(--font-mono); color: var(--tx3); }
+
+.barTrack { height: 3px; border-radius: 3px; background: var(--surf2); overflow: hidden; margin-top: 2px; }
+.barFill  { height: 100%; border-radius: 3px; background: var(--green); transition: width 0.4s; }
+.pctRow {
+  font-size: 10px;
+  color: var(--tx3);
+  font-family: var(--font-mono);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+}

@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* ─────────────────────────────────────────
+   THEME TOKENS
+───────────────────────────────────────── */
+:root {
+  --bg: #0d1117;
+  --surf: #161b22;
+  --surf2: #21262d;
+  --surf3: #2d333b;
+  --bdr: #30363d;
+  --bdr2: #21262d;
+  --tx: #e6edf3;
+  --tx2: #8b949e;
+  --tx3: #6e7681;
+  --tx4: #484f58;
+
+  --blue: #388bfd;
+  --blue-bg: #0d2349;
+  --blue-dim: #1a3a6e;
+
+  --green: #3fb950;
+  --green-bg: #0f2d1a;
+  --green-dim: #1a4731;
+
+  --red: #f85149;
+  --red-bg: #2d0f0f;
+  --red-dim: #5c1f1f;
+
+  --amber: #d29922;
+  --amber-bg: #2d1f0a;
+  --amber-dim: #4d3510;
+
+  --purple: #bc8cff;
+  --purple-bg: #1e0d2d;
+  --purple-dim: #3d1f5c;
+
+  --r: 8px;
+  --rl: 12px;
+
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+[data-theme='light'] {
+  --bg: #f6f8fa;
+  --surf: #ffffff;
+  --surf2: #f0f2f4;
+  --surf3: #e4e8ec;
+  --bdr: #d0d7de;
+  --bdr2: #e1e4e8;
+  --tx: #1f2328;
+  --tx2: #57606a;
+  --tx3: #6e7781;
+  --tx4: #9198a1;
+
+  --blue: #0969da;
+  --blue-bg: #ddf4ff;
+  --blue-dim: #b6e3ff;
+
+  --green: #1a7f37;
+  --green-bg: #dafbe1;
+  --green-dim: #aceebb;
+
+  --red: #cf222e;
+  --red-bg: #ffebe9;
+  --red-dim: #ffcecb;
+
+  --amber: #9a6700;
+  --amber-bg: #fff8c5;
+  --amber-dim: #fae17d;
+
+  --purple: #8250df;
+  --purple-bg: #fbefff;
+  --purple-dim: #e2c5ff;
+}
+
+/* ─────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--tx);
+  transition: background 0.2s, color 0.2s;
+  -webkit-font-smoothing: antialiased;
+}
+
+input, select, textarea, button {
+  font-family: var(--font-sans);
+  color: var(--tx);
+}
+
+a { text-decoration: none; }
+
+/* ─────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surf3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--bdr); }
+
+/* ─────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.fade-in { animation: fadeIn 0.2s ease; }

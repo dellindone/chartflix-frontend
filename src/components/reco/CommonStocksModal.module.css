@@ -1,0 +1,85 @@
+/* src/components/reco/CommonStocksModal.module.css */
+.sectionLabel { font-size: 11px; color: var(--tx2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+
+.analystList { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surf2);
+  border-radius: var(--r);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+.row:hover   { border-color: var(--bdr); }
+.checked     { border-color: var(--blue); background: var(--blue-bg); }
+
+.checkBox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid var(--bdr);
+  background: var(--surf);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: transparent;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.checkBoxOn { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.av  { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.aName { font-size: 13px; font-weight: 500; color: var(--tx); }
+.aTag  { font-size: 11px; color: var(--tx3); }
+
+.hint   { font-size: 11px; color: var(--tx3); margin-bottom: 14px; font-style: italic; }
+.runBtn {
+  width: 100%;
+  background: var(--blue);
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: var(--r);
+  cursor: pointer;
+  margin-bottom: 18px;
+  font-family: var(--font-sans);
+}
+.runBtn:hover { opacity: 0.88; }
+
+.results {}
+.resLabel { font-size: 11px; color: var(--tx2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+.empty    { text-align: center; padding: 20px; font-size: 13px; color: var(--tx3); font-style: italic; }
+
+.resCard  { background: var(--surf2); border: 1px solid var(--bdr2); border-radius: var(--r); margin-bottom: 10px; overflow: hidden; }
+.resCardHead { padding: 10px 14px 8px; display: flex; align-items: center; justify-content: space-between; }
+.resSym  { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--tx); }
+.resName { font-size: 11px; color: var(--tx2); }
+.resCount {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--blue-bg);
+  color: var(--blue);
+  border: 1px solid var(--blue-dim);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+.resRows   { border-top: 1px solid var(--bdr2); }
+.resRow    { padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--bdr2); }
+.resRow:last-child { border-bottom: none; }
+.resAb     { display: flex; align-items: center; gap: 7px; }
+.resBav    { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 8px; font-weight: 700; flex-shrink: 0; }
+.resBname  { font-size: 12px; color: var(--tx2); }
+.resAction { display: flex; align-items: center; gap: 6px; }
+.miniPill  { font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+.buy  { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-dim); }
+.sell { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-dim); }
+.hold { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-dim); }
+.resPrice  { font-family: var(--font-mono); font-size: 11px; color: var(--tx3); }

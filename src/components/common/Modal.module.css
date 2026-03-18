@@ -1,0 +1,46 @@
+/* src/components/common/Modal.module.css */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: var(--rl);
+  width: 100%;
+  max-width: 560px;
+  max-height: 82vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--bdr2);
+  position: sticky;
+  top: 0;
+  background: var(--surf);
+  z-index: 1;
+}
+.title   { font-size: 16px; font-weight: 600; color: var(--tx); }
+.subtitle { font-size: 12px; color: var(--tx2); margin-top: 2px; }
+.close {
+  background: none;
+  border: none;
+  color: var(--tx3);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.close:hover { color: var(--tx); }
+.body { padding: 18px 20px; }

@@ -1,0 +1,72 @@
+/* src/components/reco/RecoCard.module.css */
+.card {
+  background: var(--surf);
+  border: 1px solid var(--bdr2);
+  border-radius: var(--rl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.15s;
+}
+.card:hover { border-color: var(--blue); transform: translateY(-1px); }
+.buy  { border-left: 3px solid var(--green); }
+.sell { border-left: 3px solid var(--red);   }
+.hold { border-left: 3px solid var(--amber); }
+
+.head {
+  padding: 10px 12px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.badges { display: flex; align-items: center; gap: 5px; }
+.actionPill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.8px;
+}
+.buy  { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-dim); }
+.sell { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-dim); }
+.hold { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-dim); }
+
+.sectorPill {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  background: var(--surf2);
+  color: var(--tx2);
+  border: 1px solid var(--bdr);
+}
+.date { font-size: 10px; color: var(--tx4); font-family: var(--font-mono); }
+
+.body   { padding: 2px 12px 12px; flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.sym    { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--tx); }
+.name   { font-size: 11px; color: var(--tx2); margin-bottom: 3px; }
+
+.prices { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px; }
+.priceField { display: flex; flex-direction: column; gap: 2px; }
+.priceLabel { font-size: 9px; color: var(--tx3); text-transform: uppercase; letter-spacing: 0.8px; font-family: var(--font-mono); }
+.priceVal   { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--tx); }
+.cmp  { color: var(--blue)  !important; }
+.tp   { color: var(--green) !important; }
+.sl   { color: var(--red)   !important; }
+
+.upside {
+  margin-top: 6px;
+  background: var(--surf2);
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.upsideLabel { font-size: 10px; color: var(--tx3); font-family: var(--font-mono); }
+.upsideVal   { font-family: var(--font-mono); font-size: 12px; font-weight: 700; }
+.pos { color: var(--green); }
+.neg { color: var(--red);   }
+
+.note { font-size: 11px; color: var(--tx2); margin-top: 5px; line-height: 1.4; font-style: italic; }

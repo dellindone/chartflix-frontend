@@ -1,0 +1,81 @@
+/* src/components/alerts/AlertFilters.module.css */
+.wrapper { flex-shrink: 0; }
+
+/* Control bar */
+.ctrlBar {
+  background: var(--surf);
+  border-bottom: 1px solid var(--bdr);
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.group  { display: flex; align-items: center; gap: 7px; }
+.label  { font-size: 10px; color: var(--tx3); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono); white-space: nowrap; }
+.sep    { width: 1px; height: 20px; background: var(--bdr); flex-shrink: 0; }
+
+/* Segmented control */
+.seg  { display: flex; background: var(--surf2); border-radius: var(--r); padding: 3px; gap: 2px; }
+.sgb  { font-size: 12px; color: var(--tx2); padding: 4px 11px; border-radius: 6px; cursor: pointer; border: none; background: none; transition: all 0.15s; white-space: nowrap; font-family: var(--font-sans); }
+.sgb:hover { color: var(--tx); }
+
+/* active states */
+.on    { background: var(--bg); color: var(--tx); font-weight: 500; }
+.onALL       { background: var(--bg);       color: var(--tx);     font-weight: 500; }
+.onINDEX     { background: var(--bg);       color: var(--blue);   font-weight: 500; }
+.onSTOCK     { background: var(--bg);       color: var(--purple); font-weight: 500; }
+.onCOMMODITY { background: var(--bg);       color: var(--amber);  font-weight: 500; }
+.bull  { background: var(--green-bg); color: var(--green); }
+.bear  { background: var(--red-bg);   color: var(--red);   }
+
+/* Date strip */
+.dateStrip {
+  border-bottom: 1px solid var(--bdr2);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--bg);
+}
+.quickBtns { display: flex; gap: 4px; flex-wrap: wrap; }
+.qb {
+  background: var(--surf2);
+  border: none;
+  color: var(--tx2);
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.15s;
+}
+.qb:hover  { color: var(--tx); background: var(--surf3); }
+.qbOn      { background: var(--blue); color: #fff; }
+
+/* custom date row */
+.customRow { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.dsep      { font-size: 11px; color: var(--tx3); }
+.di {
+  background: var(--surf2);
+  border: 1px solid var(--bdr);
+  color: var(--tx);
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+.di:focus { border-color: var(--blue); }
+.di::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+.applyBtn {
+  background: var(--blue);
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}

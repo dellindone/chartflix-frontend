@@ -1,0 +1,103 @@
+/* src/components/layout/Navbar.module.css */
+.navbar {
+  background: var(--surf);
+  border-bottom: 1px solid var(--bdr);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+}
+.left  { display: flex; align-items: center; gap: 10px; }
+.right { display: flex; align-items: center; gap: 6px; }
+.title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tx);
+  letter-spacing: 1px;
+}
+
+/* icon button (sidebar toggle + hamburger) */
+.iconBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r);
+  background: var(--surf2);
+  border: 1px solid var(--bdr);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 9px;
+  transition: background 0.15s;
+}
+.iconBtn:hover { background: var(--surf3); }
+.iconBtn span {
+  width: 14px;
+  height: 1.5px;
+  background: var(--tx);
+  border-radius: 2px;
+  display: block;
+}
+
+/* theme button */
+.themeBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r);
+  background: var(--surf2);
+  border: 1px solid var(--bdr);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--tx);
+  line-height: 1;
+  transition: background 0.15s;
+}
+.themeBtn:hover { background: var(--surf3); }
+
+/* dropdown */
+.ddWrap    { position: relative; }
+.dropdown  {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: var(--rl);
+  width: 210px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 200;
+}
+.ddUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--bdr2);
+}
+.ddName  { font-size: 13px; font-weight: 600; color: var(--tx); }
+.ddEmail { font-size: 11px; color: var(--tx2); margin-top: 2px; word-break: break-all; }
+.ddItem  {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--tx2);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ddItem:hover { background: var(--surf2); color: var(--tx); }
+.ddSep   { height: 1px; background: var(--bdr2); }
+.danger  { color: var(--red); }
+.danger:hover { background: var(--red-bg); color: var(--red); }

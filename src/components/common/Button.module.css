@@ -1,0 +1,28 @@
+/* src/components/common/Button.module.css */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  transition: opacity 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { opacity: 0.88; }
+
+/* variants */
+.primary  { background: var(--blue); color: #fff; }
+.danger   { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-dim); }
+.ghost    { background: none; border: 1px solid var(--bdr); color: var(--tx2); }
+.ghost:hover { background: var(--surf2); opacity: 1; }
+.amber    { background: var(--amber-bg); border: 1.5px solid var(--amber-dim); color: var(--amber); }
+.amber:hover { border-color: var(--amber); opacity: 1; }
+
+/* sizes */
+.sm { font-size: 12px; padding: 5px 12px; }
+.md { font-size: 13px; padding: 8px 18px; }
+.lg { font-size: 14px; padding: 10px 24px; width: 100%; }

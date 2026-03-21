@@ -14,9 +14,9 @@ import './styles/globals.css';
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <ThemeProvider>
+        <AuthProvider>
           <Routes>
             {/* Public routes */}
             <Route path="/login"  element={<LoginPage />} />
@@ -43,8 +43,8 @@ export default function App() {
             {/* Root redirect */}
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </ThemeProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }

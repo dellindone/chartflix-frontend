@@ -8,15 +8,25 @@ import styles from './AuthPage.module.css';
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: 'demo@chartflix.com', password: 'demo123' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = login(form.email, form.password);
-    if (!result.success) { setError(result.error); return; }
+    setError('');
+    setLoading(true);
+
+    const result = await login(form.email, form.password);
+    
+    if (!result.success) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
     navigate('/alerts');
   };
 
@@ -39,6 +49,7 @@ export default function LoginPage() {
               placeholder="you@example.com"
               value={form.email}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
           <div className={styles.field}>
@@ -50,9 +61,12 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
-          <Button type="submit" variant="primary" size="lg">Sign in</Button>
+          <Button type="submit" variant="primary" size="lg" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign in'}
+          </Button>
         </form>
 
         <p className={styles.link}>

@@ -29,10 +29,9 @@ export default function Navbar({ onToggleSidebar, pathname }) {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
     setDdOpen(false);
+    await logout();
   };
 
   const goProfile = () => {

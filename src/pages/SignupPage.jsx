@@ -10,13 +10,23 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = signup(form);
-    if (!result.success) { setError(result.error); return; }
+    setError('');
+    setLoading(true);
+
+    const result = await signup(form);
+    
+    if (!result.success) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
     navigate('/alerts');
   };
 
@@ -46,10 +56,13 @@ export default function SignupPage() {
                 placeholder={placeholder}
                 value={form[name]}
                 onChange={handleChange}
+                disabled={loading}
               />
             </div>
           ))}
-          <Button type="submit" variant="primary" size="lg">Create account</Button>
+          <Button type="submit" variant="primary" size="lg" disabled={loading}>
+            {loading ? 'Creating account...' : 'Create account'}
+          </Button>
         </form>
 
         <p className={styles.link}>

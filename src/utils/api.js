@@ -1,5 +1,5 @@
 // src/utils/api.js
-const BASE_URL = 'https://chartflix-backend-production.up.railway.app/api/v1';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://chartflix-backend-production.up.railway.app/api/v1';
 
 export const API_ENDPOINTS = {
   LOGIN:            `${BASE_URL}/auth/login`,

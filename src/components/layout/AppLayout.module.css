@@ -4,7 +4,23 @@
   height: 100vh;
   overflow: hidden;
   background: var(--bg);
+  position: relative;
 }
+
+/* Subtle animated background */
+.layout::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 20% 50%,
+    rgba(99, 102, 241, 0.05) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
 .content {
   flex: 1;
   min-width: 0;
@@ -12,7 +28,10 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
+
 .main {
   flex: 1;
   min-height: 0;

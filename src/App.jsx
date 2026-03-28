@@ -1,8 +1,6 @@
 // src/App.jsx
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppLayout from './components/layout/AppLayout';
 import LoginPage   from './pages/LoginPage';
@@ -10,13 +8,14 @@ import SignupPage  from './pages/SignupPage';
 import AlertsPage  from './pages/AlertsPage';
 import RecoPage    from './pages/RecoPage';
 import ProfilePage from './pages/ProfilePage';
+import AdminPage   from './pages/AdminPage';
+import AnalystPage from './pages/AnalystPage';
 import './styles/globals.css';
 
 export default function App() {
   return (
     <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
+      <AuthProvider>
           <Routes>
             {/* Public routes */}
             <Route path="/login"  element={<LoginPage />} />
@@ -32,7 +31,8 @@ export default function App() {
                       <Route path="/alerts"  element={<AlertsPage />} />
                       <Route path="/reco"    element={<RecoPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
-                      {/* Default redirect */}
+                      <Route path="/analyst" element={<AnalystPage />} />
+                      <Route path="/admin"   element={<AdminPage />} />
                       <Route path="*" element={<Navigate to="/alerts" replace />} />
                     </Routes>
                   </AppLayout>
@@ -40,11 +40,9 @@ export default function App() {
               }
             />
 
-            {/* Root redirect */}
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
-        </AuthProvider>
-      </ThemeProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

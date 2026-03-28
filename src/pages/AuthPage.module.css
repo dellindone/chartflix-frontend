@@ -6,80 +6,184 @@
   justify-content: center;
   background: var(--bg);
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
+
+.wrap::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  top: -100px;
+  left: -100px;
+  animation: pulse 8s ease-in-out infinite;
+}
+
+.wrap::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  bottom: -150px;
+  right: -150px;
+  animation: pulse 10s ease-in-out infinite 1s;
+}
+
 .card {
   background: var(--surf);
   border: 1px solid var(--bdr);
-  border-radius: var(--rl);
-  padding: 30px 26px;
+  border-radius: var(--r-lg);
+  padding: 40px 32px;
   width: 100%;
-  max-width: 350px;
-  animation: fadeIn 0.25s ease;
+  max-width: 380px;
+  animation: slideInUp 0.5s ease;
+  position: relative;
+  z-index: 10;
+  box-shadow: var(--shadow-lg);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
+
+.card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 24px 64px rgba(99, 102, 241, 0.1);
+}
+
 .brand {
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
-  color: var(--blue);
-  letter-spacing: 2px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 3px;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
 }
+
 .heading {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 800;
   color: var(--tx);
   text-align: center;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
+
 .sub {
-  font-size: 13px;
-  color: var(--tx2);
+  font-size: 15px;
+  color: var(--tx-secondary);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
+  font-weight: 400;
 }
+
 .error {
-  background: var(--red-bg);
-  border: 1px solid var(--red-dim);
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
   border-radius: var(--r);
-  padding: 8px 12px;
-  font-size: 12px;
-  color: var(--red);
-  margin-bottom: 12px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #b91c1c;
+  margin-bottom: 16px;
+  animation: slideInDown 0.3s ease;
 }
+
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 16px;
 }
+
 .label {
-  font-size: 12px;
-  color: var(--tx2);
-  font-weight: 500;
+  font-size: 14px;
+  color: var(--tx-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
+
 .input {
-  background: var(--surf2);
-  border: 1px solid var(--bdr);
+  background: var(--surf-2);
+  border: 1.5px solid var(--bdr);
   color: var(--tx);
-  font-size: 13px;
-  padding: 9px 11px;
+  font-size: 16px;
+  padding: 12px 14px;
   border-radius: var(--r);
   outline: none;
   width: 100%;
-  transition: border-color 0.15s;
+  transition: all 0.3s ease;
   font-family: var(--font-sans);
 }
-.input:focus    { border-color: var(--blue); }
-.input::placeholder { color: var(--tx3); }
-.link {
-  font-size: 13px;
-  color: var(--tx2);
-  text-align: center;
-  margin-top: 14px;
+
+.input:focus {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
-.link span {
-  color: var(--blue);
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: var(--tx-tertiary);
+}
+
+.phoneRow {
+  display: flex;
+  gap: 8px;
+}
+
+.codeSelect {
+  background: var(--surf-2);
+  border: 1.5px solid var(--bdr);
+  color: var(--tx);
+  font-size: 14px;
+  padding: 12px 8px;
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  outline: none;
+  width: 96px;
+  flex-shrink: 0;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
-.link span:hover { text-decoration: underline; }
+
+.codeSelect:focus { border-color: var(--primary); background: #ffffff; }
+.codeSelect:disabled { opacity: 0.5; cursor: not-allowed; }
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.link {
+  font-size: 14px;
+  color: var(--tx-secondary);
+  text-align: center;
+  margin-top: 20px;
+}
+
+.link span {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.link span:hover {
+  opacity: 0.7;
+}

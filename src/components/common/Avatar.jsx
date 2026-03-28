@@ -1,5 +1,4 @@
 // src/components/common/Avatar.jsx
-import React from 'react';
 import { getInitials } from '../../utils/helpers';
 import styles from './Avatar.module.css';
 

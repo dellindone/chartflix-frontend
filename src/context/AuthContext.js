@@ -1,5 +1,5 @@
 // src/context/AuthContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_ENDPOINTS, apiCall, logoutAPI } from '../utils/api';
 
@@ -18,8 +18,8 @@ export function AuthProvider({ children }) {
         try {
           const response = await apiCall(API_ENDPOINTS.USER_PROFILE, { method: 'GET' });
           if (response.ok) {
-            const user = await response.json();
-            setCurrentUser(user);
+            const json = await response.json();
+            setCurrentUser(json.data);
           } else {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
@@ -38,21 +38,21 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch(API_ENDPOINTS.SIGNIN, {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const json = await response.json();
 
       if (!response.ok) {
-        return { success: false, error: data.detail || 'Login failed' };
+        return { success: false, error: json.message || 'Login failed' };
       }
 
-      // Store tokens
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
+      // Backend wraps tokens in json.data
+      localStorage.setItem('access_token', json.data.access_token);
+      localStorage.setItem('refresh_token', json.data.refresh_token);
 
       // Fetch user profile
       const userRes = await apiCall(API_ENDPOINTS.USER_PROFILE, { method: 'GET' });
@@ -60,8 +60,8 @@ export function AuthProvider({ children }) {
         return { success: false, error: 'Failed to fetch user profile' };
       }
 
-      const user = await userRes.json();
-      setCurrentUser(user);
+      const userJson = await userRes.json();
+      setCurrentUser(userJson.data);
 
       return { success: true };
     } catch (error) {
@@ -72,30 +72,29 @@ export function AuthProvider({ children }) {
   const signup = async (data) => {
     const { name, email, phone, password, confirmPassword } = data;
 
-    // Client-side validation
-    if (!name || !email || password.length < 6) {
-      return { success: false, error: 'Fill all fields (min 6 char password).' };
+    // Client-side validation (backend requires 8+ chars)
+    if (!name || !email || password.length < 8) {
+      return { success: false, error: 'Fill all fields (min 8 char password).' };
     }
     if (password !== confirmPassword) {
       return { success: false, error: 'Passwords do not match.' };
     }
 
     try {
-      const response = await fetch(API_ENDPOINTS.SIGNUP, {
+      const response = await fetch(API_ENDPOINTS.REGISTER, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, password }),
+        body: JSON.stringify({ name, email, phone, password, confirm_password: confirmPassword }),
       });
 
-      const result = await response.json();
+      const json = await response.json();
 
       if (!response.ok) {
-        return { success: false, error: result.detail || 'Signup failed' };
+        return { success: false, error: json.message || 'Signup failed' };
       }
 
-      // Store tokens from signup response
-      localStorage.setItem('access_token', result.access_token);
-      localStorage.setItem('refresh_token', result.refresh_token);
+      localStorage.setItem('access_token', json.data.access_token);
+      localStorage.setItem('refresh_token', json.data.refresh_token);
 
       // Fetch user profile
       const userRes = await apiCall(API_ENDPOINTS.USER_PROFILE, { method: 'GET' });
@@ -103,8 +102,8 @@ export function AuthProvider({ children }) {
         return { success: false, error: 'Failed to fetch user profile' };
       }
 
-      const user = await userRes.json();
-      setCurrentUser(user);
+      const userJson = await userRes.json();
+      setCurrentUser(userJson.data);
 
       return { success: true };
     } catch (error) {
@@ -113,10 +112,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    // Call logout endpoint to invalidate token on backend
     await logoutAPI();
-
-    // Clear tokens and user state
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     setCurrentUser(null);
@@ -126,7 +122,7 @@ export function AuthProvider({ children }) {
   const updateProfile = async (updates) => {
     try {
       const response = await apiCall(API_ENDPOINTS.USER_PROFILE, {
-        method: 'PUT',
+        method: 'PATCH',
         body: JSON.stringify(updates),
       });
 
@@ -134,8 +130,8 @@ export function AuthProvider({ children }) {
         return { success: false, error: 'Failed to update profile' };
       }
 
-      const updatedUser = await response.json();
-      setCurrentUser(updatedUser);
+      const json = await response.json();
+      setCurrentUser(json.data);
       return { success: true };
     } catch (error) {
       return { success: false, error: 'Server error' };

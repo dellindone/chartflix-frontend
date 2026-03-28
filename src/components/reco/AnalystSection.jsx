@@ -1,12 +1,11 @@
 // src/components/reco/AnalystSection.jsx
-import React from 'react';
 import RecoCard from './RecoCard';
 import styles from './AnalystSection.module.css';
 
 export default function AnalystSection({ analyst, isCollapsed, onToggleCollapse, showCollapseBtn }) {
-  const buyCount  = analyst.recommendations.filter((r) => r.action === 'buy').length;
-  const sellCount = analyst.recommendations.filter((r) => r.action === 'sell').length;
-  const holdCount = analyst.recommendations.filter((r) => r.action === 'hold').length;
+  const buyCount  = analyst.recommendations.filter((r) => r.action === 'BUY').length;
+  const sellCount = analyst.recommendations.filter((r) => r.action === 'SELL').length;
+  const holdCount = analyst.recommendations.filter((r) => r.action === 'HOLD').length;
 
   return (
     <div className={styles.section}>
@@ -44,8 +43,8 @@ export default function AnalystSection({ analyst, isCollapsed, onToggleCollapse,
 
       {!isCollapsed && (
         <div className={styles.grid}>
-          {analyst.recommendations.map((rec, i) => (
-            <RecoCard key={i} rec={rec} />
+          {analyst.recommendations.map((rec) => (
+            <RecoCard key={rec.id} rec={rec} />
           ))}
         </div>
       )}

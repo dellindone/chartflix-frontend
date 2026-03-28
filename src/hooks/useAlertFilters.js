@@ -1,57 +1,45 @@
 // src/hooks/useAlertFilters.js
-import { useState, useMemo } from 'react';
-import { ALERTS } from '../data/alerts';
-import { getDateRange } from '../utils/helpers';
+import { useState, useMemo, useEffect } from 'react';
+import { apiCall, API_ENDPOINTS } from '../utils/api';
 
 export function useAlertFilters() {
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState('ALL');
-  const [directionFilter, setDirectionFilter] = useState('BULLISH');
-  const [quickDate, setQuickDate] = useState('today');
-  const [customFrom, setCustomFrom] = useState('');
-  const [customTo, setCustomTo] = useState('');
+  const [directionFilter, setDirectionFilter] = useState('ALL');
 
-  // Resolve active date range
-  const { from: dateFrom, to: dateTo } = useMemo(() => {
-    if (quickDate === 'custom') return { from: customFrom, to: customTo };
-    return getDateRange(quickDate);
-  }, [quickDate, customFrom, customTo]);
-
-  const setQuickDateKey = (key) => {
-    setQuickDate(key);
-    if (key !== 'custom') {
-      setCustomFrom('');
-      setCustomTo('');
-    }
-  };
-
-  const applyCustomDate = (from, to) => {
-    setCustomFrom(from);
-    setCustomTo(to);
-  };
-
-  const toggleDirection = (dir) => {
-    setDirectionFilter((prev) => (prev === dir ? 'ALL' : dir));
-  };
-
-  const isInDate = (alert) => {
-    if (dateFrom && alert.date < dateFrom) return false;
-    if (dateTo && alert.date > dateTo) return false;
-    return true;
-  };
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await apiCall(`${API_ENDPOINTS.ALERTS}?limit=100`, { method: 'GET' });
+        const json = await res.json();
+        if (json.success) {
+          setAlerts(json.data);
+        } else {
+          setError(json.message || 'Failed to load alerts');
+        }
+      } catch {
+        setError('Failed to load alerts');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAlerts();
+  }, []);
 
   const filteredAlerts = useMemo(() => {
-    return ALERTS.filter((a) => {
+    return alerts.filter((a) => {
       if (categoryFilter !== 'ALL' && a.category !== categoryFilter) return false;
       if (directionFilter !== 'ALL' && a.direction !== directionFilter) return false;
-      return isInDate(a);
-    }, [isInDate]);
-  }, [categoryFilter, directionFilter, dateFrom, dateTo]);
-
-  // Category summary (only date-filtered, not category-filtered)
-  const dateFilteredAlerts = useMemo(() => ALERTS.filter(isInDate), [dateFrom, dateTo]);
+      return true;
+    });
+  }, [alerts, categoryFilter, directionFilter]);
 
   const getCategorySummary = (cat) => {
-    const subset = dateFilteredAlerts.filter((a) => a.category === cat);
+    const subset = alerts.filter((a) => a.category === cat);
     const bull = subset.filter((a) => a.direction === 'BULLISH').length;
     const bear = subset.filter((a) => a.direction === 'BEARISH').length;
     const total = bull + bear;
@@ -60,17 +48,15 @@ export function useAlertFilters() {
   };
 
   return {
+    alerts,
     categoryFilter,
     setCategoryFilter,
     directionFilter,
-    toggleDirection,
-    quickDate,
-    setQuickDateKey,
-    customFrom,
-    customTo,
-    applyCustomDate,
+    setDirectionFilter,
     filteredAlerts,
     getCategorySummary,
-    totalAlerts: ALERTS.length,
+    totalAlerts: alerts.length,
+    loading,
+    error,
   };
 }

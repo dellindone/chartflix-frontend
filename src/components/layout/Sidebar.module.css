@@ -1,70 +1,169 @@
 /* src/components/layout/Sidebar.module.css */
 .sidebar {
-  width: 190px;
+  width: 220px;
   flex-shrink: 0;
   background: var(--surf);
   border-right: 1px solid var(--bdr);
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: width 0.25s ease, opacity 0.25s ease;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease,
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
+
 .collapsed {
   width: 0;
   border-right: none;
   opacity: 0;
+  pointer-events: none;
 }
+
+/* ── Brand ── */
 .brand {
-  padding: 18px 16px 15px;
-  border-bottom: 1px solid var(--bdr2);
+  padding: 20px 16px 18px;
+  border-bottom: 1px solid var(--bdr);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  white-space: nowrap;
 }
+
+.logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--gradient-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: var(--glow-brand);
+}
+
+.brandText { display: flex; flex-direction: column; gap: 1px; }
+
 .company {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--blue);
-  letter-spacing: 1px;
-  white-space: nowrap;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
+
 .tagline {
-  font-size: 11px;
-  color: var(--tx3);
-  margin-top: 3px;
-  white-space: nowrap;
+  font-size: 10px;
+  color: var(--tx-tertiary);
+  letter-spacing: 0.3px;
+  font-weight: 500;
 }
+
+/* ── Nav ── */
 .nav {
   flex: 1;
   padding: 12px 8px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
+
+.nav::-webkit-scrollbar { width: 4px; }
+.nav::-webkit-scrollbar-track { background: transparent; }
+.nav::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 99px;
+}
+
 .item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 11px;
+  gap: 10px;
+  padding: 9px 10px;
   border-radius: var(--r);
   cursor: pointer;
-  font-size: 13px;
-  color: var(--tx2);
-  margin-bottom: 2px;
+  color: var(--tx-secondary);
   border: 1px solid transparent;
-  transition: all 0.15s;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  position: relative;
 }
+
 .item:hover {
-  background: var(--surf2);
+  background: var(--surf-hover);
   color: var(--tx);
+  border-color: var(--bdr);
 }
+
 .active {
-  background: var(--blue-bg);
-  color: var(--blue);
-  border-color: var(--blue-dim);
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--primary);
+  border-color: rgba(99, 102, 241, 0.2);
 }
-.icon {
-  font-size: 14px;
-  width: 18px;
-  text-align: center;
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.desc {
+  font-size: 10px;
+  color: var(--tx-tertiary);
+  font-weight: 400;
+}
+
+.active .desc { color: rgba(99, 102, 241, 0.6); }
+
+.activeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-left: auto;
   flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 12px 10px;
+  border-top: 1px solid var(--bdr);
+  flex-shrink: 0;
+}
+
+.roleBadge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border-radius: var(--r);
+  background: var(--surf-2);
+  border: 1px solid var(--bdr);
+}
+
+.roleLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--tx-secondary);
 }

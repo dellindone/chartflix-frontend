@@ -1,17 +1,24 @@
 /* src/components/common/Avatar.module.css */
 .avatar {
   border-radius: 50%;
-  background: var(--blue-bg);
-  border: 2px solid var(--blue-dim);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  color: var(--blue);
+  color: #fff;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
 }
+
+.avatar:hover {
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
+  transform: scale(1.05);
+}
+
 .img {
   width: 100%;
   height: 100%;

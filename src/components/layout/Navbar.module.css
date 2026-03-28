@@ -2,31 +2,34 @@
 .navbar {
   background: var(--surf);
   border-bottom: 1px solid var(--bdr);
-  padding: 0 16px;
+  padding: 0 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
+  height: 54px;
   flex-shrink: 0;
   position: relative;
   z-index: 100;
 }
-.left  { display: flex; align-items: center; gap: 10px; }
-.right { display: flex; align-items: center; gap: 6px; }
-.title {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--tx);
-  letter-spacing: 1px;
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* icon button (sidebar toggle + hamburger) */
-.iconBtn {
+.right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Menu button ── */
+.menuBtn {
   width: 34px;
   height: 34px;
-  border-radius: var(--r);
-  background: var(--surf2);
+  border-radius: 9px;
+  background: transparent;
   border: 1px solid var(--bdr);
   cursor: pointer;
   display: flex;
@@ -35,69 +38,174 @@
   justify-content: center;
   gap: 4px;
   padding: 9px;
-  transition: background 0.15s;
-}
-.iconBtn:hover { background: var(--surf3); }
-.iconBtn span {
-  width: 14px;
-  height: 1.5px;
-  background: var(--tx);
-  border-radius: 2px;
-  display: block;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-/* theme button */
-.themeBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--r);
-  background: var(--surf2);
-  border: 1px solid var(--bdr);
-  cursor: pointer;
+.menuBtn:hover {
+  background: var(--surf-hover);
+  border-color: var(--bdr-light);
+}
+
+.menuBtn span {
+  width: 13px;
+  height: 1.5px;
+  background: var(--tx-secondary);
+  border-radius: 99px;
+  display: block;
+  transition: background 0.2s;
+}
+
+.menuBtn:hover span { background: var(--tx); }
+
+/* ── Title ── */
+.titleWrap {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: var(--tx);
-  line-height: 1;
-  transition: background 0.15s;
+  gap: 8px;
 }
-.themeBtn:hover { background: var(--surf3); }
 
-/* dropdown */
-.ddWrap    { position: relative; }
-.dropdown  {
+.titleIcon {
+  font-size: 13px;
+  color: var(--primary-light);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tx);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ── Avatar button ── */
+.avatarBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--bdr);
+  border-radius: 10px;
+  padding: 4px 10px 4px 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 38px;
+}
+
+.avatarBtn:hover {
+  background: var(--surf-hover);
+  border-color: var(--bdr-light);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tx);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.userRole {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.caret {
+  font-size: 10px;
+  color: var(--tx-tertiary);
+  margin-left: 2px;
+}
+
+/* ── Dropdown ── */
+.ddWrap { position: relative; }
+
+.dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
   background: var(--surf);
   border: 1px solid var(--bdr);
-  border-radius: var(--rl);
-  width: 210px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: var(--r-lg);
+  width: 248px;
+  box-shadow: var(--shadow-xl);
   overflow: hidden;
-  z-index: 200;
+  z-index: 300;
 }
+
 .ddUser {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 14px 10px;
-  border-bottom: 1px solid var(--bdr2);
+  align-items: flex-start;
+  gap: 11px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid var(--bdr);
+  background: var(--surf-2);
 }
-.ddName  { font-size: 13px; font-weight: 600; color: var(--tx); }
-.ddEmail { font-size: 11px; color: var(--tx2); margin-top: 2px; word-break: break-all; }
-.ddItem  {
+
+.ddName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tx);
+  line-height: 1.3;
+}
+
+.ddEmail {
+  font-size: 12px;
+  color: var(--tx-secondary);
+  margin-top: 1px;
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.ddRoleBadge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+.ddItem {
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 10px 14px;
   font-size: 13px;
-  color: var(--tx2);
+  font-weight: 500;
+  color: var(--tx-secondary);
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s ease;
 }
-.ddItem:hover { background: var(--surf2); color: var(--tx); }
-.ddSep   { height: 1px; background: var(--bdr2); }
-.danger  { color: var(--red); }
-.danger:hover { background: var(--red-bg); color: var(--red); }
+
+.ddItem:hover {
+  background: var(--surf-hover);
+  color: var(--tx);
+}
+
+.ddItemIcon {
+  font-size: 12px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+  color: var(--tx-tertiary);
+}
+
+.ddSep {
+  height: 1px;
+  background: var(--bdr);
+  margin: 3px 0;
+}
+
+.danger { color: #dc2626 !important; }
+.danger:hover { background: rgba(220, 38, 38, 0.06) !important; color: #dc2626 !important; }
+.danger .ddItemIcon { color: #dc2626 !important; }

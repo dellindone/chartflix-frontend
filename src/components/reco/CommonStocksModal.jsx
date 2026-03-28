@@ -1,17 +1,22 @@
 // src/components/reco/CommonStocksModal.jsx
-import React, { useState } from 'react';
-import { ANALYSTS } from '../../data/analysts';
+import { useState } from 'react';
 import { formatINR } from '../../utils/helpers';
 import Modal from '../common/Modal';
 import styles from './CommonStocksModal.module.css';
 
-export default function CommonStocksModal({ isOpen, onClose }) {
-  const [checked, setChecked] = useState(new Set(ANALYSTS.map((a) => a.id)));
+export default function CommonStocksModal({ isOpen, onClose, analysts }) {
+  const [checked, setChecked] = useState(new Set());
   const [results, setResults] = useState(null);
+
+  // Initialize checked set when analysts load
+  const checkedSet = checked.size === 0 && analysts.length > 0
+    ? new Set(analysts.map((a) => a.id))
+    : checked;
 
   const toggle = (id) => {
     setChecked((prev) => {
-      const next = new Set(prev);
+      const base = prev.size === 0 ? new Set(analysts.map((a) => a.id)) : prev;
+      const next = new Set(base);
       if (next.has(id)) { if (next.size <= 2) return prev; next.delete(id); }
       else next.add(id);
       return next;
@@ -20,12 +25,13 @@ export default function CommonStocksModal({ isOpen, onClose }) {
   };
 
   const runCommon = () => {
-    const selected = ANALYSTS.filter((a) => checked.has(a.id));
+    const base = checkedSet;
+    const selected = analysts.filter((a) => base.has(a.id));
     const symMap = {};
     selected.forEach((a) =>
       a.recommendations.forEach((r) => {
-        if (!symMap[r.sym]) symMap[r.sym] = { name: r.name, entries: [] };
-        symMap[r.sym].entries.push({ analyst: a, rec: r });
+        if (!symMap[r.symbol]) symMap[r.symbol] = { name: r.name, entries: [] };
+        symMap[r.symbol].entries.push({ analyst: a, rec: r });
       })
     );
     const commons = Object.entries(symMap)
@@ -38,8 +44,8 @@ export default function CommonStocksModal({ isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} title="Common Stocks" subtitle="Select analysts to compare overlapping picks">
       <div className={styles.sectionLabel}>Select analysts to compare</div>
       <div className={styles.analystList}>
-        {ANALYSTS.map((a) => {
-          const isChecked = checked.has(a.id);
+        {analysts.map((a) => {
+          const isChecked = checkedSet.has(a.id);
           return (
             <div key={a.id} className={`${styles.row} ${isChecked ? styles.checked : ''}`} onClick={() => toggle(a.id)}>
               <div className={`${styles.checkBox} ${isChecked ? styles.checkBoxOn : ''}`}>
@@ -70,9 +76,25 @@ export default function CommonStocksModal({ isOpen, onClose }) {
             results.commons.map(([sym, data]) => (
               <div key={sym} className={styles.resCard}>
                 <div className={styles.resCardHead}>
-                  <div>
-                    <div className={styles.resSym}>{sym}</div>
-                    <div className={styles.resName}>{data.name}</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div className={styles.resSym}>{sym}</div>
+                      <button
+                        className={styles.copyBtn}
+                        title="Copy symbol"
+                        onClick={() => navigator.clipboard.writeText(sym)}
+                        type="button"
+                      >📋</button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div className={styles.resName}>{data.name}</div>
+                      <button
+                        className={styles.copyBtn}
+                        title="Copy name"
+                        onClick={() => navigator.clipboard.writeText(data.name)}
+                        type="button"
+                      >📋</button>
+                    </div>
                   </div>
                   <div className={styles.resCount}>{data.entries.length}/{results.selectedCount} analysts</div>
                 </div>
@@ -84,7 +106,7 @@ export default function CommonStocksModal({ isOpen, onClose }) {
                         <span className={styles.resBname}>{e.analyst.name}</span>
                       </div>
                       <div className={styles.resAction}>
-                        <span className={`${styles.miniPill} ${styles[e.rec.action]}`}>{e.rec.action.toUpperCase()}</span>
+                        <span className={`${styles.miniPill} ${styles[e.rec.action.toLowerCase()]}`}>{e.rec.action}</span>
                         <span className={styles.resPrice}>₹{formatINR(e.rec.cmp)} → ₹{formatINR(e.rec.target)}</span>
                       </div>
                     </div>

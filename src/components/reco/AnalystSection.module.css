@@ -7,11 +7,13 @@
   justify-content: space-between;
   padding: 10px 14px;
   background: var(--surf);
-  border: 1px solid var(--bdr2);
+  border: 1px solid var(--bdr);
   border-radius: var(--r);
   margin-bottom: 12px;
 }
+
 .info   { display: flex; align-items: center; gap: 10px; }
+
 .avatar {
   width: 38px;
   height: 38px;
@@ -21,47 +23,51 @@
   justify-content: center;
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
   flex-shrink: 0;
 }
-.name { font-size: 14px; font-weight: 600; color: var(--tx); }
-.tag  { font-size: 11px; color: var(--tx2); margin-top: 2px; }
+
+.name { font-size: 15px; font-weight: 700; color: var(--tx); }
+.tag  { font-size: 11px; color: var(--tx-secondary); margin-top: 2px; }
 
 .right  { display: flex; align-items: center; gap: 8px; }
 .stats  { display: flex; gap: 6px; }
+
 .stat {
   font-size: 11px;
   font-family: var(--font-mono);
-  background: var(--surf2);
+  background: var(--surf-2);
   padding: 3px 9px;
   border-radius: 20px;
-  color: var(--tx2);
+  color: var(--tx-secondary);
 }
-.bull { background: var(--green-bg); color: var(--green); }
-.bear { background: var(--red-bg);   color: var(--red);   }
+
+.bull { background: rgba(34, 197, 94, 0.12);  color: var(--success); }
+.bear { background: rgba(239, 68, 68, 0.12);  color: var(--error); }
 
 /* collapse button */
 .collapseBtn {
   width: 28px;
   height: 28px;
   border-radius: var(--r);
-  background: var(--surf2);
+  background: var(--surf-2);
   border: 1px solid var(--bdr);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tx2);
+  color: var(--tx-secondary);
   font-size: 12px;
   transition: all 0.15s;
   flex-shrink: 0;
 }
-.collapseBtn:hover { background: var(--surf3); color: var(--tx); }
+
+.collapseBtn:hover { background: var(--surf-hover); color: var(--tx); }
 .chev { display: inline-block; transition: transform 0.2s; }
 .collapsed .chev { transform: rotate(-90deg); }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }

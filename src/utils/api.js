@@ -1,12 +1,15 @@
 // src/utils/api.js
-const BASE_URL = 'https://chartflix-backend-production.up.railway.app';
+const BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
 export const API_ENDPOINTS = {
-  SIGNIN: `${BASE_URL}/auth/signin`,
-  SIGNUP: `${BASE_URL}/auth/signup`,
-  LOGOUT: `${BASE_URL}/auth/logout`,
-  REFRESH: `${BASE_URL}/auth/refresh`,
-  USER_PROFILE: `${BASE_URL}/user/profile`,
+  LOGIN:            `${BASE_URL}/auth/login`,
+  REGISTER:         `${BASE_URL}/auth/register`,
+  LOGOUT:           `${BASE_URL}/auth/logout`,
+  USER_PROFILE:     `${BASE_URL}/users/me`,
+  ALERTS:           `${BASE_URL}/alerts`,
+  RECOMMENDATIONS:  `${BASE_URL}/recommendations`,
+  ADMIN_USERS:      `${BASE_URL}/admin/users`,
+  ADMIN_ROLE:       (userId) => `${BASE_URL}/admin/users/${userId}/role`,
 };
 
 // Helper to get auth headers
@@ -18,66 +21,31 @@ export const getAuthHeaders = () => {
   };
 };
 
-// Handle token refresh
-export const refreshAccessToken = async () => {
-  const refreshToken = localStorage.getItem('refresh_token');
-  if (!refreshToken) throw new Error('No refresh token available');
-
-  const response = await fetch(API_ENDPOINTS.REFRESH, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refresh_token: refreshToken }),
-  });
-
-  if (!response.ok) {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    throw new Error('Token refresh failed');
-  }
-
-  const data = await response.json();
-  localStorage.setItem('access_token', data.access_token);
-  return data.access_token;
-};
-
-// Logout helper to send refresh token
+// Logout helper — backend expects refresh_token as a query param
 export const logoutAPI = async () => {
   const refreshToken = localStorage.getItem('refresh_token');
   if (!refreshToken) return;
 
   try {
-    await apiCall(API_ENDPOINTS.LOGOUT, {
+    await fetch(`${API_ENDPOINTS.LOGOUT}?refresh_token=${encodeURIComponent(refreshToken)}`, {
       method: 'POST',
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      headers: getAuthHeaders(),
     });
   } catch (error) {
     console.error('Logout API call failed:', error);
   }
 };
 
-// API request wrapper with auto token refresh
+// API request wrapper — clears tokens on 401 (no refresh endpoint on backend)
 export const apiCall = async (url, options = {}) => {
-  let response = await fetch(url, {
+  const response = await fetch(url, {
     ...options,
     headers: getAuthHeaders(),
   });
 
-  // If unauthorized, try to refresh token
   if (response.status === 401) {
-    try {
-      const newToken = await refreshAccessToken();
-      return fetch(url, {
-        ...options,
-        headers: {
-          ...getAuthHeaders(),
-          Authorization: `Bearer ${newToken}`,
-        },
-      });
-    } catch (error) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      throw error;
-    }
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
 
   return response;

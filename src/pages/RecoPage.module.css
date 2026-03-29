@@ -58,6 +58,14 @@
   flex-wrap: wrap;
 }
 
+@media (max-width: 640px) {
+  .fixed { padding: 12px 12px 0; }
+  .ddBtn { min-width: 160px; font-size: 13px; }
+  .scroll { padding: 12px; }
+  .topBar, .topRow { margin-bottom: 12px; }
+  .heading { font-size: 22px; }
+}
+
 /* Analyst dropdown */
 .ddWrap { position: relative; }
 

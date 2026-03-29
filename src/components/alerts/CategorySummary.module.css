@@ -9,6 +9,26 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 768px) {
+  .grid { gap: 6px; padding: 10px; }
+  .card { padding: 8px 6px; gap: 4px; min-width: 0; overflow: hidden; }
+  .bullNum, .bearNum { font-size: 12px; }
+  .bullBox, .bearBox { padding: 3px 4px; gap: 1px; min-width: 0; }
+  .title { font-size: 8px; letter-spacing: 0.3px; gap: 3px; }
+  .dot { width: 5px; height: 5px; }
+  .totalText { font-size: 9px; }
+  .countLabel { display: none; }
+  .pctRow { font-size: 9px; }
+  .top { gap: 2px; }
+}
+
+@media (max-width: 400px) {
+  .grid { gap: 4px; padding: 8px; }
+  .card { padding: 6px 4px; }
+  .bullNum, .bearNum { font-size: 11px; }
+  .title { font-size: 7px; }
+}
+
 .card {
   background: var(--surf);
   border: 1px solid var(--bdr);
@@ -19,6 +39,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .card:hover { border-color: var(--primary); transform: translateY(-1px); }

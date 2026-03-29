@@ -209,3 +209,10 @@
 .danger { color: #dc2626 !important; }
 .danger:hover { background: rgba(220, 38, 38, 0.06) !important; color: #dc2626 !important; }
 .danger .ddItemIcon { color: #dc2626 !important; }
+
+@media (max-width: 640px) {
+  .userInfo { display: none; }
+  .caret { display: none; }
+  .avatarBtn { padding: 4px 6px; }
+  .title { font-size: 13px; }
+}

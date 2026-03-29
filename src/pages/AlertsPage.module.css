@@ -38,6 +38,10 @@
   gap: 12px;
 }
 
+@media (max-width: 1280px) { .grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 768px)  { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .scroll { padding: 10px; } }
+
 .empty {
   text-align: center;
   padding: 60px 24px;

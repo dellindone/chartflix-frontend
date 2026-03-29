@@ -152,6 +152,11 @@
   gap: 14px;
 }
 
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .full { grid-column: 1; }
+}
+
 .field {
   display: flex;
   flex-direction: column;

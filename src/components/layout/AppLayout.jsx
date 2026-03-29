@@ -6,11 +6,15 @@ import Navbar from './Navbar';
 import styles from './AppLayout.module.css';
 
 export default function AppLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 768);
   const location = useLocation();
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   return (
     <div className={styles.layout}>
+      {sidebarOpen && isMobile && (
+        <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />
+      )}
       <Sidebar isOpen={sidebarOpen} />
       <div className={styles.content}>
         <Navbar

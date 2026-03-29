@@ -50,7 +50,7 @@
 .hold { border-left: 4px solid var(--warning); }
 
 .head {
-  padding: 12px 14px 8px;
+  padding: 6px 10px 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -66,7 +66,7 @@
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 6px;
   letter-spacing: 0.8px;
   text-transform: uppercase;
@@ -92,7 +92,7 @@
 
 .sectorPill {
   font-size: 10px;
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 6px;
   font-family: var(--font-mono);
   background: var(--surf-2);
@@ -107,16 +107,16 @@
 }
 
 .body {
-  padding: 4px 14px 12px;
+  padding: 3px 10px 6px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
 }
 
 .sym {
   font-family: var(--font-mono);
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 900;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
@@ -125,17 +125,17 @@
 }
 
 .name {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--tx-secondary);
-  margin-bottom: 3px;
+  margin-bottom: 1px;
   font-weight: 500;
 }
 
 .prices {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 7px;
-  margin-top: 4px;
+  gap: 4px;
+  margin-top: 2px;
 }
 
 .priceField {
@@ -155,7 +155,7 @@
 
 .priceVal {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--tx);
 }
@@ -165,10 +165,10 @@
 .sl  { color: #b91c1c !important; }
 
 .upside {
-  margin-top: 6px;
+  margin-top: auto;
   background: rgba(99, 102, 241, 0.04);
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: 6px;
+  padding: 3px 7px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -186,7 +186,7 @@
 
 .upsideVal {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
 }
 

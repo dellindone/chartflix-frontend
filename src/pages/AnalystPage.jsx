@@ -2,14 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiCall, API_ENDPOINTS } from '../utils/api';
-import { formatINR } from '../utils/helpers';
+import { formatINR, calcPct } from '../utils/helpers';
 import styles from './AnalystPage.module.css';
-
-/* ─── helpers ─── */
-function formatDate(iso) {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-}
 
 /* ─── Alert Create Form ─── */
 const ALERT_DEFAULTS = {
@@ -162,6 +156,30 @@ export default function AnalystPage() {
     finally { setRecoSaving(false); }
   };
 
+  // ── Update alert field (direction, etc.) ──
+  const handleUpdateAlert = async (alertId, patch) => {
+    try {
+      const res  = await apiCall(`${API_ENDPOINTS.ALERTS}/${alertId}`, { method: 'PATCH', body: JSON.stringify(patch) });
+      const json = await res.json();
+      if (json.success) {
+        setAlerts((p) => p.map((a) => a.id === alertId ? { ...a, ...patch } : a));
+        showToast('Alert updated');
+      } else showToast(json.message || 'Update failed', 'error');
+    } catch { showToast('Server error', 'error'); }
+  };
+
+  // ── Update reco field (action, etc.) ──
+  const handleUpdateReco = async (recoId, patch) => {
+    try {
+      const res  = await apiCall(`${API_ENDPOINTS.RECOMMENDATIONS}/${recoId}`, { method: 'PATCH', body: JSON.stringify(patch) });
+      const json = await res.json();
+      if (json.success) {
+        setRecos((p) => p.map((r) => r.id === recoId ? { ...r, ...patch } : r));
+        showToast('Recommendation updated');
+      } else showToast(json.message || 'Update failed', 'error');
+    } catch { showToast('Server error', 'error'); }
+  };
+
   // ── Toggle publish ──
   const toggleAlertPublish = async (alertId) => {
     setPublishing(alertId);
@@ -265,10 +283,10 @@ export default function AnalystPage() {
               <button className={styles.createBtn} onClick={() => setAlertModal(true)}>+ Create your first alert</button>
             </div>
           ) : (
-            <div className={styles.list}>
+            <div className={styles.cardGrid}>
               {alerts.map((a) => (
-                <div key={a.id} className={styles.row}>
-                  <div className={styles.rowLeft}>
+                <div key={a.id} className={`${styles.mCard} ${a.direction === 'BULLISH' ? styles.bull : styles.bear}`}>
+                  <div className={styles.mCardHead}>
                     <div className={styles.rowBadges}>
                       <span className={`${styles.pill} ${a.direction === 'BULLISH' ? styles.bull : styles.bear}`}>
                         {a.direction === 'BULLISH' ? '▲' : '▼'} {a.direction}
@@ -276,16 +294,25 @@ export default function AnalystPage() {
                       <span className={styles.pill2}>{a.category}</span>
                       <span className={styles.pill2}>{a.exchange}</span>
                     </div>
-                    <div className={styles.rowTitle}>{a.contract}</div>
-                    <div className={styles.rowMeta}>
-                      LTP ₹{formatINR(a.ltp)} · Strike {formatINR(a.strike)} · Opt LTP ₹{a.option_ltp} · Lot {a.lot_size}
-                    </div>
-                    <div className={styles.rowDate}>{formatDate(a.created_at)}</div>
-                  </div>
-                  <div className={styles.rowRight}>
                     <span className={styles.statusPill} style={{ color: statusColor(a.status), borderColor: `${statusColor(a.status)}44`, background: `${statusColor(a.status)}11` }}>
                       {a.status}
                     </span>
+                  </div>
+                  <div className={styles.mCardBody}>
+                    <div className={styles.rowTitle}>{a.contract}</div>
+                    <div className={styles.rowMeta}>Strike {formatINR(a.strike)} · LTP ₹{formatINR(a.ltp)}</div>
+                    <div className={styles.rowMeta}>Opt LTP ₹{a.option_ltp} · Lot {a.lot_size}</div>
+                    <div className={styles.mInvest}>₹{formatINR(a.investment)}</div>
+                  </div>
+                  <div className={styles.mCardCtrl}>
+                    <select
+                      className={styles.ctrlSelect}
+                      value={a.direction === 'BULLISH' ? 'BUY' : 'SELL'}
+                      onChange={(e) => handleUpdateAlert(a.id, { direction: e.target.value === 'BUY' ? 'BULLISH' : 'BEARISH' })}
+                    >
+                      <option value="BUY">BUY</option>
+                      <option value="SELL">SELL</option>
+                    </select>
                     <button
                       className={`${styles.publishBtn} ${a.status === 'ACTIVE' ? styles.unpublishBtn : ''}`}
                       onClick={() => toggleAlertPublish(a.id)}
@@ -311,37 +338,53 @@ export default function AnalystPage() {
               <button className={styles.createBtn} onClick={() => setRecoModal(true)}>+ Create your first recommendation</button>
             </div>
           ) : (
-            <div className={styles.list}>
-              {recos.map((r) => (
-                <div key={r.id} className={styles.row}>
-                  <div className={styles.rowLeft}>
-                    <div className={styles.rowBadges}>
-                      <span className={`${styles.pill} ${r.action === 'BUY' ? styles.bull : r.action === 'SELL' ? styles.bear : styles.hold}`}>
-                        {r.action}
+            <div className={styles.cardGrid}>
+              {recos.map((r) => {
+                const actionLower = r.action.toLowerCase();
+                const upside = parseFloat(calcPct(r.cmp, r.target));
+                return (
+                  <div key={r.id} className={`${styles.mCard} ${styles[actionLower + 'Border']}`}>
+                    <div className={styles.mCardHead}>
+                      <div className={styles.rowBadges}>
+                        <span className={`${styles.pill} ${actionLower === 'buy' ? styles.bull : actionLower === 'sell' ? styles.bear : styles.hold}`}>
+                          {r.action}
+                        </span>
+                        <span className={styles.pill2}>{r.sector}</span>
+                      </div>
+                      <span className={styles.statusPill} style={{ color: statusColor(r.status), borderColor: `${statusColor(r.status)}44`, background: `${statusColor(r.status)}11` }}>
+                        {r.status}
                       </span>
-                      <span className={styles.pill2}>{r.sector}</span>
                     </div>
-                    <div className={styles.rowTitle}>{r.symbol} <span className={styles.rowSubtitle}>— {r.name}</span></div>
-                    <div className={styles.rowMeta}>
-                      CMP ₹{formatINR(r.cmp)} · Target ₹{formatINR(r.target)} · SL ₹{formatINR(r.stop_loss)}
+                    <div className={styles.mCardBody}>
+                      <div className={styles.rowTitle}>{r.symbol}</div>
+                      <div className={styles.rowSubtitle}>{r.name}</div>
+                      <div className={styles.rowMeta}>CMP ₹{formatINR(r.cmp)} · TGT ₹{formatINR(r.target)}</div>
+                      <div className={styles.rowMeta}>SL ₹{formatINR(r.stop_loss)}</div>
+                      <div className={`${styles.mInvest} ${upside >= 0 ? styles.upsidePos : styles.upsideNeg}`}>
+                        {upside >= 0 ? '+' : ''}{upside}% {r.action === 'SELL' ? 'downside' : 'upside'}
+                      </div>
                     </div>
-                    {r.note && <div className={styles.rowNote}>{r.note}</div>}
-                    <div className={styles.rowDate}>{formatDate(r.created_at)}</div>
+                    <div className={styles.mCardCtrl}>
+                      <select
+                        className={styles.ctrlSelect}
+                        value={r.action}
+                        onChange={(e) => handleUpdateReco(r.id, { action: e.target.value })}
+                      >
+                        <option value="BUY">BUY</option>
+                        <option value="SELL">SELL</option>
+                        <option value="HOLD">HOLD</option>
+                      </select>
+                      <button
+                        className={`${styles.publishBtn} ${r.status === 'PUBLISHED' ? styles.unpublishBtn : ''}`}
+                        onClick={() => toggleRecoPublish(r.id)}
+                        disabled={publishing === r.id}
+                      >
+                        {publishing === r.id ? '…' : r.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+                      </button>
+                    </div>
                   </div>
-                  <div className={styles.rowRight}>
-                    <span className={styles.statusPill} style={{ color: statusColor(r.status), borderColor: `${statusColor(r.status)}44`, background: `${statusColor(r.status)}11` }}>
-                      {r.status}
-                    </span>
-                    <button
-                      className={`${styles.publishBtn} ${r.status === 'PUBLISHED' ? styles.unpublishBtn : ''}`}
-                      onClick={() => toggleRecoPublish(r.id)}
-                      disabled={publishing === r.id}
-                    >
-                      {publishing === r.id ? '…' : r.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )
         )}
@@ -373,7 +416,7 @@ export default function AnalystPage() {
                 <input className={styles.input} placeholder="NIFTY50" value={af.symbol} onChange={(e) => setAF('symbol', e.target.value)} required />
               </Field>
               <Field label="Contract">
-                <input className={styles.input} placeholder="NIFTY26MAR22000CE" value={af.contract} onChange={(e) => setAF('contract', e.target.value)} required />
+                <input className={styles.input} placeholder="NIFTY26MAR22000CE" value={af.contract} onChange={(e) => setAF('contract', e.target.value.toUpperCase())} required style={{ textTransform: 'uppercase' }} />
               </Field>
               <Field label="LTP">
                 <input className={styles.input} type="number" step="0.01" placeholder="0.00" value={af.ltp} onChange={(e) => setAF('ltp', e.target.value)} required />
@@ -384,7 +427,7 @@ export default function AnalystPage() {
               <Field label="Option LTP">
                 <input className={styles.input} type="number" step="0.01" placeholder="0.00" value={af.option_ltp} onChange={(e) => setAF('option_ltp', e.target.value)} required />
               </Field>
-              <Field label="Lot Size">
+              <Field label="Quantity">
                 <input className={styles.input} type="number" placeholder="1" value={af.lot_size} onChange={(e) => setAF('lot_size', e.target.value)} required />
               </Field>
               <Field label="Investment (lot size × option LTP)">

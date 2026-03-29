@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
   LOGIN:            `${BASE_URL}/auth/login`,
   REGISTER:         `${BASE_URL}/auth/register`,
   LOGOUT:           `${BASE_URL}/auth/logout`,
+  REFRESH:          `${BASE_URL}/auth/refresh`,
   USER_PROFILE:     `${BASE_URL}/users/me`,
   ALERTS:           `${BASE_URL}/alerts`,
   RECOMMENDATIONS:  `${BASE_URL}/recommendations`,
@@ -36,16 +37,45 @@ export const logoutAPI = async () => {
   }
 };
 
-// API request wrapper — clears tokens on 401 (no refresh endpoint on backend)
+// Attempt to refresh the access token using the stored refresh token
+const tryRefresh = async () => {
+  const refreshToken = localStorage.getItem('refresh_token');
+  if (!refreshToken) return false;
+  try {
+    const res = await fetch(
+      `${API_ENDPOINTS.REFRESH}?refresh_token=${encodeURIComponent(refreshToken)}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+    );
+    if (!res.ok) return false;
+    const json = await res.json();
+    if (json.data?.access_token) {
+      localStorage.setItem('access_token', json.data.access_token);
+      localStorage.setItem('refresh_token', json.data.refresh_token);
+      return true;
+    }
+  } catch { /* ignore */ }
+  return false;
+};
+
+// API request wrapper — auto-refreshes token on 401, clears session if refresh fails
 export const apiCall = async (url, options = {}) => {
-  const response = await fetch(url, {
+  let response = await fetch(url, {
     ...options,
     headers: getAuthHeaders(),
   });
 
   if (response.status === 401) {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    const refreshed = await tryRefresh();
+    if (refreshed) {
+      // Retry original request with new token
+      response = await fetch(url, {
+        ...options,
+        headers: getAuthHeaders(),
+      });
+    } else {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+    }
   }
 
   return response;

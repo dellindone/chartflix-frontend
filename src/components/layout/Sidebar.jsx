@@ -31,7 +31,9 @@ export default function Sidebar({ isOpen }) {
   return (
     <aside className={`${styles.sidebar} ${isOpen ? '' : styles.collapsed}`}>
       <div className={styles.brand}>
-        <div className={styles.logo}>CF</div>
+        <div className={styles.logo}>
+          <img src="/logo.png" alt="Chartflix" className={styles.logoImg} />
+        </div>
         <div className={styles.brandText}>
           <div className={styles.company}>CHARTFLIX</div>
           <div className={styles.tagline}>Trading Terminal</div>

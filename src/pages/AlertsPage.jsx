@@ -3,6 +3,7 @@ import { useAlertFilters } from '../hooks/useAlertFilters';
 import CategorySummary from '../components/alerts/CategorySummary';
 import AlertFilters from '../components/alerts/AlertFilters';
 import AlertCard from '../components/alerts/AlertCard';
+import Spinner from '../components/common/Spinner';
 import styles from './AlertsPage.module.css';
 
 export default function AlertsPage() {
@@ -41,7 +42,7 @@ export default function AlertsPage() {
         {error ? (
           <div className={styles.empty}>⚠ {error}</div>
         ) : loading ? (
-          <div className={styles.empty}>Loading...</div>
+          <Spinner text="Loading alerts..." />
         ) : filteredAlerts.length === 0 ? (
           <div className={styles.empty}>No alerts match your filters.</div>
         ) : (

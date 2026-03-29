@@ -1,0 +1,137 @@
+/* src/components/common/LoadingScreen.module.css */
+.wrap {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Logo ── */
+.logoWrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  animation: floatLogo 3s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImg {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: drop-shadow(0 0 20px rgba(201, 168, 76, 0.6));
+  position: relative;
+  z-index: 1;
+}
+
+.spinRingWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.spinRingSvg {
+  width: 140px;
+  height: 140px;
+  animation: spinRing 2s linear infinite;
+}
+
+.spinArc {
+  transform-origin: 70px 70px;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Brand text ── */
+.brand {
+  font-family: 'Arial Black', 'Impact', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #c9a84c;
+  text-shadow: 0 0 24px rgba(201, 168, 76, 0.5);
+  animation: textFade 2s ease-in-out infinite;
+}
+
+@keyframes textFade {
+  0%, 100% { opacity: 0.8; text-shadow: 0 0 24px rgba(201, 168, 76, 0.4); }
+  50%       { opacity: 1;   text-shadow: 0 0 32px rgba(201, 168, 76, 0.8); }
+}
+
+.tagline {
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: rgba(201, 168, 76, 0.55);
+  text-transform: uppercase;
+  margin-top: -10px;
+}
+
+/* ── Loading bar ── */
+.barTrack {
+  width: 200px;
+  height: 2px;
+  background: rgba(201, 168, 76, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.barFill {
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  border-radius: 2px;
+  animation: shimmer 1.6s ease-in-out infinite;
+  width: 40%;
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-200%); }
+  100% { transform: translateX(500%); }
+}
+
+/* ── Dots ── */
+.dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c9a84c;
+  opacity: 0.3;
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}

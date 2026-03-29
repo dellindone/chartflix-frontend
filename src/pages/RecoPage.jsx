@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { apiCall, API_ENDPOINTS } from '../utils/api';
 import AnalystSection from '../components/reco/AnalystSection';
 import CommonStocksModal from '../components/reco/CommonStocksModal';
+import Spinner from '../components/common/Spinner';
 import styles from './RecoPage.module.css';
 
 // Generate a consistent avatar color pair from an analyst_id string
@@ -172,7 +173,7 @@ export default function RecoPage() {
         {error ? (
           <div className={styles.empty}>⚠ {error}</div>
         ) : loading ? (
-          <div className={styles.empty}>Loading recommendations...</div>
+          <Spinner text="Loading recommendations..." />
         ) : toShow.length === 0 ? (
           <div className={styles.empty}>No recommendations found.</div>
         ) : (

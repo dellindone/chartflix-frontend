@@ -1,0 +1,82 @@
+/* src/components/alerts/AlertCardSkeleton.module.css */
+
+/* shimmer base */
+.bone {
+  background: linear-gradient(
+    90deg,
+    var(--surf-2) 25%,
+    var(--surf-hover) 50%,
+    var(--surf-2) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position:  800px 0; }
+}
+
+/* Card shell */
+.card {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Header */
+.head {
+  padding: 8px 10px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--bdr);
+}
+.row { display: flex; gap: 6px; }
+.pill    { width: 52px; height: 18px; }
+.pillSm  { width: 38px; height: 18px; }
+.exchip  { width: 28px; height: 16px; }
+
+/* Body */
+.body {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.contract { height: 14px; width: 90%; }
+.sym      { height: 11px; width: 55%; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 2px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.label { height: 9px;  width: 60%; }
+.val   { height: 13px; width: 80%; }
+.invest { height: 16px; width: 70%; margin-top: auto; }
+
+/* Footer */
+.footer {
+  padding: 6px 10px;
+  border-top: 1px solid var(--bdr);
+  background: var(--surf-2);
+}
+.ts { height: 10px; width: 80%; }

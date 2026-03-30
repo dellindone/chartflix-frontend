@@ -262,6 +262,7 @@
 .rowSubtitle { font-weight: 400; color: var(--tx-secondary); font-family: var(--font-sans); font-size: 13px; }
 
 .rowMeta { font-size: 12px; color: var(--tx-secondary); font-family: var(--font-mono); }
+.rowTs  { font-size: 10px; color: var(--tx-tertiary); font-family: var(--font-mono); margin-top: 4px; }
 .rowNote { font-size: 12px; color: var(--tx-tertiary); font-style: italic; }
 .rowDate { font-size: 11px; color: var(--tx-tertiary); }
 
@@ -298,6 +299,61 @@
   color: #92400e;
 }
 .unpublishBtn:hover { background: rgba(217,119,6,0.15); }
+
+.deleteBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: 1px solid rgba(220,38,38,0.25);
+  background: rgba(220,38,38,0.07);
+  color: #dc2626;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.deleteBtn:hover { background: rgba(220,38,38,0.18); border-color: rgba(220,38,38,0.5); }
+
+.confirmRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+.confirmText {
+  font-size: 11px;
+  font-weight: 600;
+  color: #dc2626;
+  flex: 1;
+}
+.confirmYes {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(220,38,38,0.4);
+  background: rgba(220,38,38,0.1);
+  color: #dc2626;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.confirmYes:hover { background: rgba(220,38,38,0.2); }
+.confirmYes:disabled { opacity: 0.5; cursor: not-allowed; }
+.confirmNo {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--bdr);
+  background: var(--surf-2);
+  color: var(--tx-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.confirmNo:hover { background: var(--surf-hover); }
 
 /* ── Empty states ── */
 .empty    { padding: 32px; text-align: center; color: var(--tx-tertiary); font-size: 14px; }

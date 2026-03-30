@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiCall, API_ENDPOINTS } from '../utils/api';
-import { formatINR, calcPct } from '../utils/helpers';
+import { formatINR, calcPct, fmtTime } from '../utils/helpers';
 import styles from './AnalystPage.module.css';
 
 /* ─── Alert Create Form ─── */
@@ -25,7 +25,7 @@ function Modal({ title, onClose, children }) {
       <div className={`${styles.modal} slide-in-up`}>
         <div className={styles.modalHead}>
           <span className={styles.modalTitle}>{title}</span>
-          <button className={styles.modalClose} onClick={onClose}>✕</button>
+          <button className={styles.modalClose} onClick={onClose}>×</button>
         </div>
         <div className={styles.modalBody}>{children}</div>
       </div>
@@ -65,8 +65,10 @@ export default function AnalystPage() {
   const [recoSaving, setRecoSaving]     = useState(false);
   const [recoFormErr, setRecoFormErr]   = useState('');
 
-  const [toast, setToast]     = useState(null);
+  const [toast, setToast]         = useState(null);
   const [publishing, setPublishing] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null); // id pending confirm
+  const [deleting, setDeleting]           = useState(null); // id being deleted
 
   const isAllowed = currentUser?.role === 'analyst' || currentUser?.role === 'admin';
 
@@ -75,11 +77,14 @@ export default function AnalystPage() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // ── Fetch my alerts ──
+  const isAdmin = currentUser?.role === 'admin';
+
+  // ── Fetch alerts — all for admin, own for analyst ──
   const fetchAlerts = async () => {
     setAlertsLoading(true); setAlertsError(null);
     try {
-      const res  = await apiCall(`${API_ENDPOINTS.ALERTS}/my`, { method: 'GET' });
+      const url  = isAdmin ? `${API_ENDPOINTS.ALERTS}?limit=200` : `${API_ENDPOINTS.ALERTS}/my`;
+      const res  = await apiCall(url, { method: 'GET' });
       const json = await res.json();
       if (json.success) setAlerts(json.data);
       else setAlertsError(json.message || 'Failed to load alerts');
@@ -87,11 +92,12 @@ export default function AnalystPage() {
     finally { setAlertsLoading(false); }
   };
 
-  // ── Fetch my recos ──
+  // ── Fetch recos — all for admin, own for analyst ──
   const fetchRecos = async () => {
     setRecosLoading(true); setRecosError(null);
     try {
-      const res  = await apiCall(`${API_ENDPOINTS.RECOMMENDATIONS}/my`, { method: 'GET' });
+      const url  = isAdmin ? `${API_ENDPOINTS.RECOMMENDATIONS}?limit=200` : `${API_ENDPOINTS.RECOMMENDATIONS}/my`;
+      const res  = await apiCall(url, { method: 'GET' });
       const json = await res.json();
       if (json.success) setRecos(json.data);
       else setRecosError(json.message || 'Failed to load recommendations');
@@ -180,6 +186,23 @@ export default function AnalystPage() {
     } catch { showToast('Server error', 'error'); }
   };
 
+  // ── Delete content ──
+  const handleDelete = async (id, type) => {
+    setDeleting(id);
+    try {
+      const res = await apiCall(API_ENDPOINTS.ADMIN_CONTENT(id), { method: 'DELETE' });
+      if (res.ok || res.status === 204) {
+        if (type === 'alert') setAlerts((p) => p.filter((a) => a.id !== id));
+        else setRecos((p) => p.filter((r) => r.id !== id));
+        showToast(`${type === 'alert' ? 'Alert' : 'Recommendation'} deleted`);
+      } else {
+        const json = await res.json().catch(() => ({}));
+        showToast(json.message || 'Delete failed', 'error');
+      }
+    } catch { showToast('Server error', 'error'); }
+    finally { setDeleting(null); setConfirmDelete(null); }
+  };
+
   // ── Toggle publish ──
   const toggleAlertPublish = async (alertId) => {
     setPublishing(alertId);
@@ -210,7 +233,7 @@ export default function AnalystPage() {
   if (!isAllowed) {
     return (
       <div className={styles.denied}>
-        <div className={styles.deniedIcon}>✦</div>
+        <div className={styles.deniedIcon}></div>
         <div className={styles.deniedTitle}>Analysts Only</div>
         <div className={styles.deniedSub}>This page is for analysts and admins.</div>
       </div>
@@ -240,7 +263,7 @@ export default function AnalystPage() {
     <div className={styles.page}>
       {toast && (
         <div className={`${styles.toast} ${toast.type === 'error' ? styles.toastErr : styles.toastOk} fade-in`}>
-          {toast.type === 'error' ? '✕' : '✓'} {toast.msg}
+          {toast.msg}
         </div>
       )}
 
@@ -261,11 +284,11 @@ export default function AnalystPage() {
       {/* Tabs */}
       <div className={styles.tabs}>
         <button className={`${styles.tab} ${tab === 'alerts' ? styles.tabActive : ''}`} onClick={() => setTab('alerts')}>
-          ◈ Alerts
+          Alerts
           <span className={styles.tabCount}>{alerts.length}</span>
         </button>
         <button className={`${styles.tab} ${tab === 'recos' ? styles.tabActive : ''}`} onClick={() => setTab('recos')}>
-          ◆ Recommendations
+          Recommendations
           <span className={styles.tabCount}>{recos.length}</span>
         </button>
       </div>
@@ -278,7 +301,7 @@ export default function AnalystPage() {
           : alertsError  ? <div className={styles.emptyErr}>⚠ {alertsError}</div>
           : alerts.length === 0 ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>◈</div>
+              <div className={styles.emptyIcon}></div>
               <div className={styles.emptyText}>No alerts yet</div>
               <button className={styles.createBtn} onClick={() => setAlertModal(true)}>+ Create your first alert</button>
             </div>
@@ -289,7 +312,7 @@ export default function AnalystPage() {
                   <div className={styles.mCardHead}>
                     <div className={styles.rowBadges}>
                       <span className={`${styles.pill} ${a.direction === 'BULLISH' ? styles.bull : styles.bear}`}>
-                        {a.direction === 'BULLISH' ? '▲' : '▼'} {a.direction}
+                        {a.direction}
                       </span>
                       <span className={styles.pill2}>{a.category}</span>
                       <span className={styles.pill2}>{a.exchange}</span>
@@ -302,24 +325,38 @@ export default function AnalystPage() {
                     <div className={styles.rowTitle}>{a.contract}</div>
                     <div className={styles.rowMeta}>Strike {formatINR(a.strike)} · LTP ₹{formatINR(a.ltp)}</div>
                     <div className={styles.rowMeta}>Opt LTP ₹{a.option_ltp} · Lot {a.lot_size}</div>
+                    <div className={styles.rowTs}>{fmtTime(a.created_at)}</div>
                     <div className={styles.mInvest}>₹{formatINR(a.investment)}</div>
                   </div>
                   <div className={styles.mCardCtrl}>
-                    <select
-                      className={styles.ctrlSelect}
-                      value={a.direction === 'BULLISH' ? 'BUY' : 'SELL'}
-                      onChange={(e) => handleUpdateAlert(a.id, { direction: e.target.value === 'BUY' ? 'BULLISH' : 'BEARISH' })}
-                    >
-                      <option value="BUY">BUY</option>
-                      <option value="SELL">SELL</option>
-                    </select>
-                    <button
-                      className={`${styles.publishBtn} ${a.status === 'ACTIVE' ? styles.unpublishBtn : ''}`}
-                      onClick={() => toggleAlertPublish(a.id)}
-                      disabled={publishing === a.id}
-                    >
-                      {publishing === a.id ? '…' : a.status === 'ACTIVE' ? 'Unpublish' : 'Publish'}
-                    </button>
+                    {confirmDelete === a.id ? (
+                      <div className={styles.confirmRow}>
+                        <span className={styles.confirmText}>Delete?</span>
+                        <button className={styles.confirmYes} onClick={() => handleDelete(a.id, 'alert')} disabled={deleting === a.id}>
+                          {deleting === a.id ? '…' : 'Yes'}
+                        </button>
+                        <button className={styles.confirmNo} onClick={() => setConfirmDelete(null)}>No</button>
+                      </div>
+                    ) : (
+                      <>
+                        <select
+                          className={styles.ctrlSelect}
+                          value={a.direction === 'BULLISH' ? 'BUY' : 'SELL'}
+                          onChange={(e) => handleUpdateAlert(a.id, { direction: e.target.value === 'BUY' ? 'BULLISH' : 'BEARISH' })}
+                        >
+                          <option value="BUY">BUY</option>
+                          <option value="SELL">SELL</option>
+                        </select>
+                        <button
+                          className={`${styles.publishBtn} ${a.status === 'ACTIVE' ? styles.unpublishBtn : ''}`}
+                          onClick={() => toggleAlertPublish(a.id)}
+                          disabled={publishing === a.id}
+                        >
+                          {publishing === a.id ? '…' : a.status === 'ACTIVE' ? 'Unpublish' : 'Publish'}
+                        </button>
+                        <button className={styles.deleteBtn} onClick={() => setConfirmDelete(a.id)} title="Delete">×</button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -333,7 +370,7 @@ export default function AnalystPage() {
           : recosError  ? <div className={styles.emptyErr}>⚠ {recosError}</div>
           : recos.length === 0 ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>◆</div>
+              <div className={styles.emptyIcon}></div>
               <div className={styles.emptyText}>No recommendations yet</div>
               <button className={styles.createBtn} onClick={() => setRecoModal(true)}>+ Create your first recommendation</button>
             </div>
@@ -360,27 +397,41 @@ export default function AnalystPage() {
                       <div className={styles.rowSubtitle}>{r.name}</div>
                       <div className={styles.rowMeta}>CMP ₹{formatINR(r.cmp)} · TGT ₹{formatINR(r.target)}</div>
                       <div className={styles.rowMeta}>SL ₹{formatINR(r.stop_loss)}</div>
+                      <div className={styles.rowTs}>{fmtTime(r.created_at)}</div>
                       <div className={`${styles.mInvest} ${upside >= 0 ? styles.upsidePos : styles.upsideNeg}`}>
                         {upside >= 0 ? '+' : ''}{upside}% {r.action === 'SELL' ? 'downside' : 'upside'}
                       </div>
                     </div>
                     <div className={styles.mCardCtrl}>
-                      <select
-                        className={styles.ctrlSelect}
-                        value={r.action}
-                        onChange={(e) => handleUpdateReco(r.id, { action: e.target.value })}
-                      >
-                        <option value="BUY">BUY</option>
-                        <option value="SELL">SELL</option>
-                        <option value="HOLD">HOLD</option>
-                      </select>
-                      <button
-                        className={`${styles.publishBtn} ${r.status === 'PUBLISHED' ? styles.unpublishBtn : ''}`}
-                        onClick={() => toggleRecoPublish(r.id)}
-                        disabled={publishing === r.id}
-                      >
-                        {publishing === r.id ? '…' : r.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
-                      </button>
+                      {confirmDelete === r.id ? (
+                        <div className={styles.confirmRow}>
+                          <span className={styles.confirmText}>Delete?</span>
+                          <button className={styles.confirmYes} onClick={() => handleDelete(r.id, 'reco')} disabled={deleting === r.id}>
+                            {deleting === r.id ? '…' : 'Yes'}
+                          </button>
+                          <button className={styles.confirmNo} onClick={() => setConfirmDelete(null)}>No</button>
+                        </div>
+                      ) : (
+                        <>
+                          <select
+                            className={styles.ctrlSelect}
+                            value={r.action}
+                            onChange={(e) => handleUpdateReco(r.id, { action: e.target.value })}
+                          >
+                            <option value="BUY">BUY</option>
+                            <option value="SELL">SELL</option>
+                            <option value="HOLD">HOLD</option>
+                          </select>
+                          <button
+                            className={`${styles.publishBtn} ${r.status === 'PUBLISHED' ? styles.unpublishBtn : ''}`}
+                            onClick={() => toggleRecoPublish(r.id)}
+                            disabled={publishing === r.id}
+                          >
+                            {publishing === r.id ? '…' : r.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+                          </button>
+                          <button className={styles.deleteBtn} onClick={() => setConfirmDelete(r.id)} title="Delete">×</button>
+                        </>
+                      )}
                     </div>
                   </div>
                 );

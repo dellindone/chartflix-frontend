@@ -122,11 +122,11 @@ export default function RecoPage() {
                     {selectedAnalyst.initials}
                   </div>
                 ) : (
-                  <div className={styles.ddBtnAvDefault}>◆</div>
+                  <div className={styles.ddBtnAvDefault}></div>
                 )}
                 <span>{selectedAnalyst ? selectedAnalyst.name : 'All Analysts'}</span>
               </div>
-              <span className={styles.caret}>▼</span>
+              <span className={styles.caret}></span>
             </div>
 
             {ddOpen && (
@@ -135,7 +135,7 @@ export default function RecoPage() {
                   className={`${styles.ddItem} ${analystFilter === 'ALL' ? styles.ddItemActive : ''}`}
                   onClick={() => selectAnalyst('ALL')}
                 >
-                  <div className={styles.ddItemAvDefault}>◆</div>
+                  <div className={styles.ddItemAvDefault}></div>
                   <div>
                     <div className={styles.ddItemName}>All Analysts</div>
                     <div className={styles.ddItemTag}>Show everyone</div>

@@ -185,7 +185,7 @@ export default function ProfilePage() {
                 </Button>
               </div>
             </div>
-            {saved && <div className={styles.savedMsg}>✓ Profile saved successfully</div>}
+            {saved && <div className={styles.savedMsg}>Profile saved successfully</div>}
           </form>
         </div>
       </div>

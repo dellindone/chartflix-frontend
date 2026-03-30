@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
   RECOMMENDATIONS:  `${BASE_URL}/recommendations`,
   ADMIN_USERS:      `${BASE_URL}/admin/users`,
   ADMIN_ROLE:       (userId) => `${BASE_URL}/admin/users/${userId}/role`,
+  ADMIN_CONTENT:    (contentId) => `${BASE_URL}/admin/content/${contentId}`,
 };
 
 // Helper to get auth headers

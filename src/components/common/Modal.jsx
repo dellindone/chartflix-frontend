@@ -1,5 +1,5 @@
 // src/components/common/Modal.jsx
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styles from './Modal.module.css';
 
 export default function Modal({ isOpen, onClose, title, subtitle, children }) {
@@ -19,7 +19,7 @@ export default function Modal({ isOpen, onClose, title, subtitle, children }) {
             <div className={styles.title}>{title}</div>
             {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
           </div>
-          <button className={styles.close} onClick={onClose}>✕</button>
+          <button className={styles.close} onClick={onClose}>×</button>
         </div>
         <div className={styles.body}>{children}</div>
       </div>

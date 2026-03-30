@@ -22,7 +22,7 @@ export default function AlertCard({ alert }) {
       <div className={styles.head}>
         <div className={styles.badges}>
           <span className={`${styles.dirPill} ${isBull ? styles.dpBull : styles.dpBear}`}>
-            {isBull ? '▲ BULL' : '▼ BEAR'}
+            {isBull ? 'BULL' : 'BEAR'}
           </span>
           <span className={`${styles.catPill} ${CAT_CLS[alert.category]}`}>
             {CAT_LABEL[alert.category]}

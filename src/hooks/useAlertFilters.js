@@ -10,6 +10,7 @@ export function useAlertFilters() {
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [directionFilter, setDirectionFilter] = useState('ALL');
   const [lastWsAlert, setLastWsAlert]     = useState(null); // latest real-time alert for toast
+  const [tickerAlerts, setTickerAlerts]   = useState([]);   // rolling queue for ticker tape
 
   // ── Fetch ────────────────────────────────────────────────────────────────
   const fetchAlerts = useCallback(async (silent = false) => {
@@ -34,8 +35,9 @@ export function useAlertFilters() {
 
   // ── WebSocket ────────────────────────────────────────────────────────────
   const handleNewAlert = useCallback((data) => {
-    setLastWsAlert(data);        // trigger toast in AlertsPage
-    fetchAlerts(true);           // silent refetch for full alert objects
+    setLastWsAlert(data);
+    setTickerAlerts((prev) => [data, ...prev].slice(0, 12)); // keep last 12
+    fetchAlerts(true);
   }, [fetchAlerts]);
 
   const { isConnected } = useAlertsWebSocket({ onNewAlert: handleNewAlert });
@@ -69,5 +71,6 @@ export function useAlertFilters() {
     error,
     isConnected,
     lastWsAlert,
+    tickerAlerts,
   };
 }

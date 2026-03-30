@@ -13,13 +13,7 @@ const PAGE_TITLES = {
   '/admin':   'Admin Panel',
 };
 
-const PAGE_ICONS = {
-  '/alerts':  '◈',
-  '/reco':    '◆',
-  '/profile': '◉',
-  '/analyst': '✦',
-  '/admin':   '⬡',
-};
+
 
 export default function Navbar({ onToggleSidebar, pathname }) {
   const { currentUser, logout } = useAuth();
@@ -28,7 +22,6 @@ export default function Navbar({ onToggleSidebar, pathname }) {
   const ddRef = useRef(null);
 
   const title = PAGE_TITLES[pathname] || 'CHARTFLIX';
-  const icon  = PAGE_ICONS[pathname]  || '◆';
 
   useEffect(() => {
     const handler = (e) => {
@@ -52,7 +45,6 @@ export default function Navbar({ onToggleSidebar, pathname }) {
           <span /><span /><span />
         </button>
         <div className={styles.titleWrap}>
-          <span className={styles.titleIcon}>{icon}</span>
           <span className={styles.title}>{title}</span>
         </div>
       </div>
@@ -87,21 +79,21 @@ export default function Navbar({ onToggleSidebar, pathname }) {
                 </div>
               </div>
               <div className={styles.ddItem} onClick={goProfile}>
-                <span className={styles.ddItemIcon}>◉</span> My Profile
+                My Profile
               </div>
               {(currentUser?.role === 'analyst' || currentUser?.role === 'admin') && (
                 <div className={styles.ddItem} onClick={() => { navigate('/analyst'); setDdOpen(false); }}>
-                  <span className={styles.ddItemIcon}>✦</span> My Content
+                  My Content
                 </div>
               )}
               {currentUser?.role === 'admin' && (
                 <div className={styles.ddItem} onClick={() => { navigate('/admin'); setDdOpen(false); }}>
-                  <span className={styles.ddItemIcon}>⬡</span> Admin Panel
+                  Admin Panel
                 </div>
               )}
               <div className={styles.ddSep} />
               <div className={`${styles.ddItem} ${styles.danger}`} onClick={handleLogout}>
-                <span className={styles.ddItemIcon}>→</span> Sign Out
+                Sign Out
               </div>
             </div>
           )}

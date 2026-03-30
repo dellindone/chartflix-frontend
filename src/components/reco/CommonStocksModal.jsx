@@ -49,7 +49,7 @@ export default function CommonStocksModal({ isOpen, onClose, analysts }) {
           return (
             <div key={a.id} className={`${styles.row} ${isChecked ? styles.checked : ''}`} onClick={() => toggle(a.id)}>
               <div className={`${styles.checkBox} ${isChecked ? styles.checkBoxOn : ''}`}>
-                {isChecked && '✓'}
+                {isChecked && <span className={styles.checkMark}>&#10003;</span>}
               </div>
               <div className={styles.av} style={{ background: a.avatarBg, color: a.avatarColor }}>{a.initials}</div>
               <div>

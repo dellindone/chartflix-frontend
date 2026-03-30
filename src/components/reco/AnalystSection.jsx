@@ -25,9 +25,9 @@ export default function AnalystSection({ analyst, isCollapsed, onToggleCollapse,
 
         <div className={styles.right}>
           <div className={styles.stats}>
-            {buyCount  > 0 && <span className={`${styles.stat} ${styles.bull}`}>▲ {buyCount} Buy</span>}
-            {sellCount > 0 && <span className={`${styles.stat} ${styles.bear}`}>▼ {sellCount} Sell</span>}
-            {holdCount > 0 && <span className={styles.stat}>▬ {holdCount} Hold</span>}
+            {buyCount  > 0 && <span className={`${styles.stat} ${styles.bull}`}>{buyCount} Buy</span>}
+            {sellCount > 0 && <span className={`${styles.stat} ${styles.bear}`}>{sellCount} Sell</span>}
+            {holdCount > 0 && <span className={styles.stat}>{holdCount} Hold</span>}
           </div>
           {showCollapseBtn && (
             <button
@@ -35,7 +35,7 @@ export default function AnalystSection({ analyst, isCollapsed, onToggleCollapse,
               onClick={onToggleCollapse}
               title={isCollapsed ? 'Expand' : 'Collapse'}
             >
-              <span className={styles.chev}>▼</span>
+              <span className={styles.chev}></span>
             </button>
           )}
         </div>

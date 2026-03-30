@@ -4,8 +4,11 @@ import { useAlertFilters } from '../hooks/useAlertFilters';
 import CategorySummary from '../components/alerts/CategorySummary';
 import AlertFilters from '../components/alerts/AlertFilters';
 import AlertCard from '../components/alerts/AlertCard';
-import Spinner from '../components/common/Spinner';
+import AlertCardSkeleton from '../components/alerts/AlertCardSkeleton';
+import TickerTape from '../components/alerts/TickerTape';
 import styles from './AlertsPage.module.css';
+
+const SKELETON_COUNT = 14;
 
 export default function AlertsPage() {
   const {
@@ -13,12 +16,11 @@ export default function AlertsPage() {
     directionFilter, setDirectionFilter,
     filteredAlerts, getCategorySummary,
     totalAlerts, loading, error,
-    isConnected, lastWsAlert,
+    isConnected, lastWsAlert, tickerAlerts,
   } = useAlertFilters();
 
-  // Toast state — auto-dismiss after 4 s
+  // Toast — auto-dismiss after 4s
   const [toast, setToast] = useState(null);
-
   useEffect(() => {
     if (!lastWsAlert) return;
     setToast(lastWsAlert);
@@ -29,7 +31,7 @@ export default function AlertsPage() {
   return (
     <div className={styles.page}>
 
-      {/* Live toast notification */}
+      {/* Live toast */}
       {toast && (
         <div className={`${styles.toast} ${toast.direction === 'BULLISH' ? styles.toastBull : styles.toastBear}`}>
           <span className={styles.toastDot} />
@@ -44,6 +46,9 @@ export default function AlertsPage() {
       )}
 
       <div className={styles.fixed}>
+        {/* Ticker tape — shows once WS alerts arrive */}
+        <TickerTape alerts={tickerAlerts} />
+
         <CategorySummary
           getSummary={getCategorySummary}
           activeCategory={categoryFilter}
@@ -62,7 +67,6 @@ export default function AlertsPage() {
               : <>Showing <strong>{filteredAlerts.length}</strong> of <strong>{totalAlerts}</strong> alerts</>
             }
           </span>
-          {/* Live indicator */}
           <span className={`${styles.liveChip} ${isConnected ? styles.liveOn : styles.liveOff}`}>
             <span className={styles.liveDot} />
             {isConnected ? 'LIVE' : 'OFFLINE'}
@@ -74,13 +78,25 @@ export default function AlertsPage() {
         {error ? (
           <div className={styles.empty}>⚠ {error}</div>
         ) : loading ? (
-          <Spinner text="Loading alerts..." />
+          /* Skeleton loader grid */
+          <div className={styles.grid}>
+            {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+              <AlertCardSkeleton key={i} index={i} />
+            ))}
+          </div>
         ) : filteredAlerts.length === 0 ? (
           <div className={styles.empty}>No alerts match your filters.</div>
         ) : (
+          /* Staggered card entrance */
           <div className={styles.grid}>
-            {filteredAlerts.map((alert) => (
-              <AlertCard key={alert.id} alert={alert} />
+            {filteredAlerts.map((alert, i) => (
+              <div
+                key={alert.id}
+                className="card-enter"
+                style={{ animationDelay: `${Math.min(i * 40, 600)}ms` }}
+              >
+                <AlertCard alert={alert} />
+              </div>
             ))}
           </div>
         )}

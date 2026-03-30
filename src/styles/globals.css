@@ -139,3 +139,11 @@ a {
 .fade-in      { animation: fadeIn 0.25s ease; }
 .slide-in-up  { animation: slideInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
 .slide-in-down{ animation: slideInDown 0.3s ease; }
+
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+.card-enter {
+  animation: cardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}

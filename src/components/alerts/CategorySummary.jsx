@@ -35,11 +35,11 @@ export default function CategorySummary({ getSummary, activeCategory, onSelectCa
             <div className={styles.counts}>
               <div className={styles.bullBox}>
                 <span className={styles.bullNum}>{bull}</span>
-                <span className={styles.countLabel}>▲ Bull</span>
+                <span className={styles.countLabel}>Bull</span>
               </div>
               <div className={styles.bearBox}>
                 <span className={styles.bearNum}>{bear}</span>
-                <span className={styles.countLabel}>▼ Bear</span>
+                <span className={styles.countLabel}>Bear</span>
               </div>
             </div>
 

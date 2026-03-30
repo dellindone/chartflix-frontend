@@ -1,4 +1,5 @@
 // src/pages/AlertsPage.jsx
+import { useEffect, useState } from 'react';
 import { useAlertFilters } from '../hooks/useAlertFilters';
 import CategorySummary from '../components/alerts/CategorySummary';
 import AlertFilters from '../components/alerts/AlertFilters';
@@ -12,10 +13,36 @@ export default function AlertsPage() {
     directionFilter, setDirectionFilter,
     filteredAlerts, getCategorySummary,
     totalAlerts, loading, error,
+    isConnected, lastWsAlert,
   } = useAlertFilters();
+
+  // Toast state — auto-dismiss after 4 s
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    if (!lastWsAlert) return;
+    setToast(lastWsAlert);
+    const t = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(t);
+  }, [lastWsAlert]);
 
   return (
     <div className={styles.page}>
+
+      {/* Live toast notification */}
+      {toast && (
+        <div className={`${styles.toast} ${toast.direction === 'BULLISH' ? styles.toastBull : styles.toastBear}`}>
+          <span className={styles.toastDot} />
+          <span className={styles.toastText}>
+            <strong>{toast.symbol}</strong> · {toast.contract} ·{' '}
+            <span className={toast.direction === 'BULLISH' ? styles.bull : styles.bear}>
+              {toast.direction === 'BULLISH' ? 'BULLISH' : 'BEARISH'}
+            </span>
+          </span>
+          <span className={styles.toastLtp}>₹{toast.option_ltp}</span>
+        </div>
+      )}
+
       <div className={styles.fixed}>
         <CategorySummary
           getSummary={getCategorySummary}
@@ -34,6 +61,11 @@ export default function AlertsPage() {
               ? 'Loading alerts...'
               : <>Showing <strong>{filteredAlerts.length}</strong> of <strong>{totalAlerts}</strong> alerts</>
             }
+          </span>
+          {/* Live indicator */}
+          <span className={`${styles.liveChip} ${isConnected ? styles.liveOn : styles.liveOff}`}>
+            <span className={styles.liveDot} />
+            {isConnected ? 'LIVE' : 'OFFLINE'}
           </span>
         </div>
       </div>

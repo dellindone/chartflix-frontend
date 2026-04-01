@@ -16,7 +16,7 @@ const ROLE_META = {
 function SkeletonRow() {
   return (
     <tr className={styles.skRow}>
-      {[180, 200, 120, 80, 160].map((w, i) => (
+      {[180, 200, 120, 80, 100, 80, 160].map((w, i) => (
         <td key={i}><div className={styles.skBone} style={{ width: w }} /></td>
       ))}
     </tr>
@@ -30,7 +30,8 @@ export default function AdminPage() {
   const [roleTab, setRoleTab]   = useState('ALL');
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(null);
-  const [updating, setUpdating] = useState(null);
+  const [updating, setUpdating]   = useState(null);
+  const [approving, setApproving] = useState(null); // userId being approved/rejected
   const [toast, setToast]       = useState(null);
 
   const showToast = (msg, type = 'success') => {
@@ -77,6 +78,20 @@ export default function AdminPage() {
       } else showToast(json.message || 'Update failed', 'error');
     } catch { showToast('Update failed', 'error'); }
     finally { setUpdating(null); }
+  };
+
+  const handleApproval = async (userId, approve) => {
+    setApproving(userId);
+    try {
+      const endpoint = approve ? API_ENDPOINTS.ADMIN_APPROVE(userId) : API_ENDPOINTS.ADMIN_REJECT(userId);
+      const res  = await apiCall(endpoint, { method: 'PATCH' });
+      const json = await res.json();
+      if (json.success) {
+        setUsers((prev) => prev.map((u) => u.id === userId ? { ...u, is_approved: approve } : u));
+        showToast(approve ? 'User approved' : 'User rejected');
+      } else showToast(json.message || 'Failed', 'error');
+    } catch { showToast('Server error', 'error'); }
+    finally { setApproving(null); }
   };
 
   const stats = {
@@ -193,6 +208,7 @@ export default function AdminPage() {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Joined</th>
+                  <th>Status</th>
                   <th>Role</th>
                   <th>Change Role</th>
                 </tr>
@@ -201,9 +217,9 @@ export default function AdminPage() {
                 {loading ? (
                   Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)
                 ) : error ? (
-                  <tr><td colSpan={6} className={styles.emptyErr}>{error}</td></tr>
+                  <tr><td colSpan={7} className={styles.emptyErr}>{error}</td></tr>
                 ) : filtered.length === 0 ? (
-                  <tr><td colSpan={6} className={styles.empty}>No users found.</td></tr>
+                  <tr><td colSpan={7} className={styles.empty}>No users found.</td></tr>
                 ) : (
                   filtered.map((user, i) => {
                     const meta = ROLE_META[user.role] || ROLE_META.user;
@@ -241,6 +257,24 @@ export default function AdminPage() {
                         {/* Joined */}
                         <td className={styles.dimCell}>
                           {user.created_at ? fmtTime(user.created_at).split(',')[0] : '—'}
+                        </td>
+
+                        {/* Status — approve / reject dropdown */}
+                        <td>
+                          {isSelf ? (
+                            <span className={styles.approvedPill}>Approved</span>
+                          ) : (
+                            <select
+                              className={`${styles.approvalSelect} ${user.is_approved ? styles.approvalSelectApproved : styles.approvalSelectPending}`}
+                              value={user.is_approved ? 'approved' : 'pending'}
+                              disabled={approving === user.id}
+                              onChange={(e) => handleApproval(user.id, e.target.value === 'approved')}
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="approved">Approved</option>
+                            </select>
+                          )}
+                          {approving === user.id && <span className={styles.updatingDot} />}
                         </td>
 
                         {/* Role pill */}

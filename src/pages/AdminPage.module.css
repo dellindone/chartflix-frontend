@@ -118,6 +118,8 @@
   border: 1px solid var(--bdr);
   border-radius: var(--r-lg);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Toolbar ── */
@@ -232,14 +234,18 @@
 /* ── Table ── */
 .tableScroll {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 480px;
   -webkit-overflow-scrolling: touch;
+  /* ensure scroll works on all devices */
+  touch-action: pan-x pan-y;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
-  min-width: 600px;
+  min-width: 780px;
 }
 
 .table th {
@@ -253,6 +259,9 @@
   border-bottom: 1px solid var(--bdr);
   white-space: nowrap;
   background: var(--surf-2);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .table td {
@@ -322,6 +331,101 @@
   white-space: nowrap;
   text-transform: uppercase;
 }
+
+/* ── Approval status ── */
+.approvalRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.approvedPill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(22,163,74,0.3);
+  background: rgba(22,163,74,0.08);
+  color: #16a34a;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.pendingPill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(217,119,6,0.3);
+  background: rgba(217,119,6,0.08);
+  color: #d97706;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.approvalSelect {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s;
+  min-width: 100px;
+}
+.approvalSelectApproved {
+  background: rgba(22,163,74,0.1);
+  border-color: rgba(22,163,74,0.35);
+  color: #16a34a;
+}
+.approvalSelectApproved:hover:not(:disabled) { background: rgba(22,163,74,0.18); }
+
+.approvalSelectPending {
+  background: rgba(217,119,6,0.1);
+  border-color: rgba(217,119,6,0.35);
+  color: #d97706;
+}
+.approvalSelectPending:hover:not(:disabled) { background: rgba(217,119,6,0.18); }
+
+.approvalSelect:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.approveBtn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #16a34a;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(22,163,74,0.35);
+}
+.approveBtn:hover:not(:disabled) { background: #15803d; transform: translateY(-1px); }
+.approveBtn:active:not(:disabled) { transform: translateY(0); }
+.approveBtn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+.rejectBtn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #dc2626;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(220,38,38,0.3);
+}
+.rejectBtn:hover:not(:disabled) { background: #b91c1c; transform: translateY(-1px); }
+.rejectBtn:active:not(:disabled) { transform: translateY(0); }
+.rejectBtn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
 /* ── Role select dropdown ── */
 .roleSelect {
@@ -394,11 +498,13 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .scroll    { padding: 14px; gap: 16px; }
-  .toolbar   { flex-direction: column; align-items: flex-start; }
+  .scroll       { padding: 14px; gap: 16px; }
+  .toolbar      { flex-direction: column; align-items: flex-start; }
   .toolbarRight { width: 100%; }
   .searchInput  { width: 100%; }
   .searchInput:focus { width: 100%; }
-  .searchWrap { width: 100%; }
-  .roleTabs  { flex-wrap: wrap; }
+  .searchWrap   { width: 100%; }
+  .roleTabs     { flex-wrap: wrap; }
+  .tableScroll  { max-height: 60vh; overflow-x: auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .table        { min-width: 700px; }
 }

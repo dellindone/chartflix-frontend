@@ -190,7 +190,8 @@ export default function AnalystPage() {
   const handleDelete = async (id, type) => {
     setDeleting(id);
     try {
-      const res = await apiCall(API_ENDPOINTS.ADMIN_CONTENT(id), { method: 'DELETE' });
+      const endpoint = type === 'alert' ? API_ENDPOINTS.ALERT_DELETE(id) : API_ENDPOINTS.RECO_DELETE(id);
+      const res = await apiCall(endpoint, { method: 'DELETE' });
       if (res.ok || res.status === 204) {
         if (type === 'alert') setAlerts((p) => p.filter((a) => a.id !== id));
         else setRecos((p) => p.filter((r) => r.id !== id));

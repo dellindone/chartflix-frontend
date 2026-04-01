@@ -9,9 +9,13 @@ export const API_ENDPOINTS = {
   USER_PROFILE:     `${BASE_URL}/users/me`,
   ALERTS:           `${BASE_URL}/alerts`,
   RECOMMENDATIONS:  `${BASE_URL}/recommendations`,
-  ADMIN_USERS:      `${BASE_URL}/admin/users`,
-  ADMIN_ROLE:       (userId) => `${BASE_URL}/admin/users/${userId}/role`,
-  ADMIN_CONTENT:    (contentId) => `${BASE_URL}/admin/content/${contentId}`,
+  ADMIN_USERS:       `${BASE_URL}/admin/users`,
+  ADMIN_ROLE:        (userId) => `${BASE_URL}/admin/users/${userId}/role`,
+  ADMIN_APPROVE:     (userId) => `${BASE_URL}/admin/users/${userId}/approve`,
+  ADMIN_REJECT:      (userId) => `${BASE_URL}/admin/users/${userId}/reject`,
+  ADMIN_CONTENT:     (contentId) => `${BASE_URL}/admin/content/${contentId}`,
+  ALERT_DELETE:      (alertId) => `${BASE_URL}/alerts/${alertId}`,
+  RECO_DELETE:       (recoId)  => `${BASE_URL}/recommendations/${recoId}`,
 };
 
 // Helper to get auth headers

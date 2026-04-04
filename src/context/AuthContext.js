@@ -70,11 +70,14 @@ export function AuthProvider({ children }) {
   };
 
   const signup = async (data) => {
-    const { name, email, phone, password, confirmPassword } = data;
+    const { name, email, phone, location, password, confirmPassword } = data;
 
     // Client-side validation (backend requires 8+ chars)
-    if (!name || !email || password.length < 8) {
-      return { success: false, error: 'Fill all fields (min 8 char password).' };
+    if (!name || !email || !phone || !location) {
+      return { success: false, error: 'Name, email, phone, and location are all required.' };
+    }
+    if (password.length < 8) {
+      return { success: false, error: 'Password must be at least 8 characters.' };
     }
     if (password !== confirmPassword) {
       return { success: false, error: 'Passwords do not match.' };
@@ -84,7 +87,7 @@ export function AuthProvider({ children }) {
       const response = await fetch(API_ENDPOINTS.REGISTER, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, password, confirm_password: confirmPassword }),
+        body: JSON.stringify({ name, email, phone, location, password, confirm_password: confirmPassword }),
       });
 
       const json = await response.json();

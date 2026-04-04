@@ -28,6 +28,7 @@ export default function SignupPage() {
   const [form, setForm] = useState({
     name: '', email: '',
     countryCode: '+91', phoneDigits: '',
+    location: '',
     password: '', confirmPassword: '',
   });
   const [error, setError] = useState('');
@@ -45,7 +46,12 @@ export default function SignupPage() {
     setError('');
     setLoading(true);
 
-    const phone = form.phoneDigits ? form.countryCode + form.phoneDigits : '';
+    if (!form.phoneDigits) {
+      setError('Phone number is required.');
+      setLoading(false);
+      return;
+    }
+    const phone = form.countryCode + form.phoneDigits;
     const result = await signup({ ...form, phone });
 
     if (!result.success) {
@@ -111,8 +117,21 @@ export default function SignupPage() {
             </div>
           </div>
 
+          <div className={styles.field}>
+            <label className={styles.label}>Location</label>
+            <input
+              className={styles.input}
+              type="text"
+              name="location"
+              placeholder="City, Country"
+              value={form.location}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </div>
+
           {[
-            { name: 'password',        label: 'Password',         type: 'password', placeholder: 'Min. 6 characters' },
+            { name: 'password',        label: 'Password',         type: 'password', placeholder: 'Min. 8 characters' },
             { name: 'confirmPassword', label: 'Confirm Password', type: 'password', placeholder: 'Repeat password' },
           ].map(({ name, label, type, placeholder }) => (
             <div className={styles.field} key={name}>

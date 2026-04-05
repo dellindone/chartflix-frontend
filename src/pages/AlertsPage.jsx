@@ -14,10 +14,16 @@ export default function AlertsPage() {
   const {
     categoryFilter, setCategoryFilter,
     directionFilter, setDirectionFilter,
+    dateFrom, setDateFrom,
+    dateTo, setDateTo,
     filteredAlerts, getCategorySummary,
     totalAlerts, loading, error,
     isConnected, lastWsAlert, tickerAlerts,
   } = useAlertFilters();
+
+  const d = new Date();
+  const todayISO = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const isToday = dateFrom === todayISO && dateTo === todayISO;
 
   // Toast — auto-dismiss after 4s
   const [toast, setToast] = useState(null);
@@ -67,6 +73,29 @@ export default function AlertsPage() {
               : <>Showing <strong>{filteredAlerts.length}</strong> of <strong>{totalAlerts}</strong> alerts</>
             }
           </span>
+          <div className={styles.dateRow}>
+            <input
+              type="date"
+              className={styles.dateInput}
+              value={dateFrom}
+              max={todayISO}
+              onChange={(e) => setDateFrom(e.target.value)}
+            />
+            <span className={styles.dateSep}>to</span>
+            <input
+              type="date"
+              className={styles.dateInput}
+              value={dateTo}
+              max={todayISO}
+              onChange={(e) => setDateTo(e.target.value)}
+            />
+            <button
+              className={`${styles.todayBtn} ${isToday ? styles.todayBtnActive : ''}`}
+              onClick={() => { setDateFrom(todayISO); setDateTo(todayISO); }}
+            >
+              Today
+            </button>
+          </div>
           <span className={`${styles.liveChip} ${isConnected ? styles.liveOn : styles.liveOff}`}>
             <span className={styles.liveDot} />
             {isConnected ? 'LIVE' : 'OFFLINE'}

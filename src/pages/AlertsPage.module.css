@@ -57,6 +57,55 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── Date range ── */
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.dateInput {
+  background: var(--surf-2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  color: var(--tx);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 8px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.dateInput:focus { border-color: var(--primary); }
+.dateInput::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+
+.dateSep {
+  font-size: 11px;
+  color: var(--tx-tertiary);
+  font-family: var(--font-mono);
+}
+
+.todayBtn {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: var(--r);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.3px;
+}
+.todayBtn:hover { background: rgba(99,102,241,0.15); }
+.todayBtnActive {
+  background: rgba(99,102,241,0.18);
+  border-color: rgba(99,102,241,0.5);
 }
 
 .resultText {

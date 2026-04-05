@@ -3,6 +3,14 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { apiCall, API_ENDPOINTS } from '../utils/api';
 import { useAlertsWebSocket } from './useAlertsWebSocket';
 
+function todayISO() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`; // local date, not UTC
+}
+
 export function useAlertFilters() {
   const [alerts, setAlerts]               = useState([]);
   const [loading, setLoading]             = useState(true);
@@ -11,13 +19,18 @@ export function useAlertFilters() {
   const [directionFilter, setDirectionFilter] = useState('ALL');
   const [lastWsAlert, setLastWsAlert]     = useState(null); // latest real-time alert for toast
   const [tickerAlerts, setTickerAlerts]   = useState([]);   // rolling queue for ticker tape
+  const [dateFrom, setDateFrom]           = useState(todayISO);
+  const [dateTo, setDateTo]               = useState(todayISO);
 
   // ── Fetch ────────────────────────────────────────────────────────────────
-  const fetchAlerts = useCallback(async (silent = false) => {
+  const fetchAlerts = useCallback(async (silent = false, from = dateFrom, to = dateTo) => {
     if (!silent) setLoading(true);
     setError(null);
     try {
-      const res  = await apiCall(`${API_ENDPOINTS.ALERTS}?limit=100`, { method: 'GET' });
+      const params = new URLSearchParams({ limit: 100 });
+      if (from) params.set('date_from', from);
+      if (to)   params.set('date_to', to);
+      const res  = await apiCall(`${API_ENDPOINTS.ALERTS}?${params}`, { method: 'GET' });
       const json = await res.json();
       if (json.success) {
         setAlerts(json.data);
@@ -29,7 +42,7 @@ export function useAlertFilters() {
     } finally {
       if (!silent) setLoading(false);
     }
-  }, []);
+  }, [dateFrom, dateTo]);
 
   useEffect(() => { fetchAlerts(); }, [fetchAlerts]);
 
@@ -37,8 +50,10 @@ export function useAlertFilters() {
   const handleNewAlert = useCallback((data) => {
     setLastWsAlert(data);
     setTickerAlerts((prev) => [data, ...prev].slice(0, 12)); // keep last 12
-    fetchAlerts(true);
-  }, [fetchAlerts]);
+    // Only silent-refresh if we're viewing today
+    const today = todayISO();
+    if (dateTo === today) fetchAlerts(true);
+  }, [fetchAlerts, dateTo]);
 
   const { isConnected } = useAlertsWebSocket({ onNewAlert: handleNewAlert });
 
@@ -64,6 +79,8 @@ export function useAlertFilters() {
     alerts,
     categoryFilter, setCategoryFilter,
     directionFilter, setDirectionFilter,
+    dateFrom, setDateFrom,
+    dateTo, setDateTo,
     filteredAlerts,
     getCategorySummary,
     totalAlerts: alerts.length,
